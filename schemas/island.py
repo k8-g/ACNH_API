@@ -18,9 +18,9 @@ islands_schema = IslandSchema(many=True, exclude=["password"])
 #         fields = ("island_id", "name_of_island", "owner_of_island", "password", "is_admin")
 
 # # to handle a single user object
-# user_schema = UserSchema(exclude=["password"])
+# user_schema = IslandUserSchema(exclude=["password"])
 
 # # to handle a list of user objects
-# users_schema = UserSchema(many=True, exclude=["password"])
+# users_schema = IslandUserSchema(many=True, exclude=["password"])
 
 
