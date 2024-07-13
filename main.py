@@ -27,10 +27,11 @@ def create_app():
     from controllers.island_controller import island_bp
     app.register_blueprint(island_bp, url_prefix='/')
     
+    from controllers.island_villagers_controller import island_villagers_bp
+    app.register_blueprint(island_villagers_bp)
 
-
-
-
+    from controllers.villager_controller import villager_bp
+    app.register_blueprint(villager_bp)
     
     
     # Import models to ensure they are registered with SQLAlchemy
