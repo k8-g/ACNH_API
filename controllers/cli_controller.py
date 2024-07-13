@@ -16,7 +16,6 @@ def drop_tables():
     db.drop_all()
     print("Tables dropped")
 
-
 @db_commands.cli.command("seed")
 def seed_tables():
     # Example seed data
