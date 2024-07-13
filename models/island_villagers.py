@@ -4,14 +4,14 @@ class IslandVillagers(db.Model):
     __tablename__ = "island_villagers"
 
     island_villagers_id = db.Column(db.Integer, primary_key=True)
-    island_id = db.Column(db.Integer, db.ForeignKey('island_user.island_id'), nullable=False)
-    villager_id = db.Column(db.Integer, db.ForeignKey('villager.villager_id'), nullable=False)
+    island_id = db.Column(db.Integer, db.ForeignKey('islands.island_id'), nullable=False)
+    villager_id = db.Column(db.Integer, db.ForeignKey('villagers.villager_id'), nullable=False)
     comment_id = db.Column(db.Integer, db.ForeignKey('comments.comments_id'))
 
     # Relationships
     island = db.relationship('IslandUser', back_populates='island_villagers')
     villager = db.relationship('Villager', back_populates='island_villagers')
-    comments = db.relationship('Comments', back_populates='island_villager')
+    comment = db.relationship('Comments', back_populates='island_villagers')
 
     def __init__(self, island_id, villager_id, comment_id=None):
         self.island_id = island_id
