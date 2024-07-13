@@ -12,6 +12,6 @@ class Villagers(db.Model):
     hobbies = db.Column(db.String, nullable=False)
 
     # Relationships
-    island_villagers = db.relationship('IslandVillagers', back_populates='villagers')
-    wanted = db.relationship('VillagersWanted', back_populates='villagers')
-    notes = db.relationship('Notes', back_populates='villagers')
+    island_villagers = db.relationship('IslandVillagers', back_populates='villager')
+    wanted = db.relationship('VillagersWanted', back_populates='villager')
+    notes = db.relationship('Notes', back_populates='villager')

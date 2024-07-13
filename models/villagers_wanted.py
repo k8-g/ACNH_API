@@ -4,8 +4,8 @@ class VillagersWanted(db.Model):
     __tablename__ = "villagers_wanted"
 
     wanted_id = db.Column(db.Integer, primary_key=True)
-    villager_id = db.Column(db.Integer, db.ForeignKey('villagers.villager_id'), nullable=False)
-    island_id = db.Column(db.Integer, db.ForeignKey('islands.island_id'), nullable=False)
+    villager_id = db.Column(db.Integer, db.ForeignKey('villager.villager_id'), nullable=False)
+    island_id = db.Column(db.Integer, db.ForeignKey('island.island_id'), nullable=False)
     item_name = db.Column(db.String, nullable=False)
     requirement_description = db.Column(db.String, nullable=False)
     required_materials = db.Column(db.String, nullable=False)

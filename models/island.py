@@ -11,8 +11,8 @@ class IslandUser(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
     # Back reference to IslandVillagers and VillagersWanted
-    island_villagers = db.relationship('IslandVillagers', back_populates='islands')
-    wanted = db.relationship('VillagersWanted', back_populates='islands')
+    island_villagers = db.relationship('IslandVillagers', back_populates='island')
+    wanted = db.relationship('VillagersWanted', back_populates='island')
 
     def __init__(self, name_of_island, owner_of_island, password, is_admin=False):
         self.name_of_island = name_of_island
