@@ -4,8 +4,8 @@ class Notes(db.Model):
     __tablename__ = "notes"
 
     notes_id = db.Column(db.Integer, primary_key=True)
-    wanted_id = db.Column(db.Integer, db.ForeignKey('villagers_wanted.wanted_id'), nullable=False)
-    villager_id = db.Column(db.Integer, db.ForeignKey('villagers.villager_id'), nullable=False)
+    wanted_id = db.Column(db.Integer, db.ForeignKey('villagers_wanted.wanted_id', name='fk_notes_wanted'))
+    villager_id = db.Column(db.Integer, db.ForeignKey('villagers.villager_id', name='fk_notes_villager'))
     notes = db.Column(db.Text, nullable=False)
 
     # Relationships
