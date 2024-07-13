@@ -33,15 +33,7 @@ def create_app():
     from controllers.villager_controller import villager_bp
     app.register_blueprint(villager_bp)
 
-    from controllers.villagers_wanted_controller import villagers_wanted_bp
-    app.register_blueprint(villagers_wanted_bp)
-    
-    from controllers.comments_controller import comments_bp
-    app.register_blueprint(comments_bp)
-    
-    from controllers.notes_controller import notes_bp
-    app.register_blueprint(notes_bp)
-    
+
     
     # Import models to ensure they are registered with SQLAlchemy
     from models.island import IslandUser
