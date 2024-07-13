@@ -14,7 +14,8 @@ class VillagersWanted(db.Model):
     # Relationships
     villager = db.relationship('Villager', back_populates='wanted')
     island = db.relationship('IslandUser', back_populates='wanted')
-    note = db.relationship('Notes', back_populates='wanted')
+    notes = db.relationship('Notes', back_populates='wanted')
+    comments = db.relationship('Comments', back_populates='wanted')
 
     def __init__(self, villager_id, island_id, item_name, requirement_description, required_materials, notes_id=None):
         self.villager_id = villager_id
