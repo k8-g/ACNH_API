@@ -1,9 +1,12 @@
 from init import ma
-
+from marshmallow import fields
 
 class IslandSchema(ma.Schema):
     class Meta:
         fields = ("island_id", "name_of_island", "owner_of_island", "password", "is_admin")
+
+    island_villagers = fields.Nested('IslandVillagersSchema', many=True, exclude=('island',))
+    wanted = fields.Nested('VillagersWantedSchema', many=True, exclude=('island',))
 
 # to handle a single island object
 island_schema = IslandSchema(exclude=["password"])
