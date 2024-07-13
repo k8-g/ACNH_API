@@ -7,7 +7,7 @@ class IslandVillagersSchema(ma.Schema):
 
     island = fields.Nested('IslandSchema', exclude=('island_villagers', 'wanted'))
     villager = fields.Nested('VillagerSchema')
-    comments = fields.Nested('CommentsSchema', many=True)
+    comments = fields.List(fields.Nested('CommentsSchema'))
 
 # to handle a single island_villager object
 island_villager_schema = IslandVillagersSchema()
