@@ -9,8 +9,8 @@ class Notes(db.Model):
     notes = db.Column(db.Text, nullable=False)
 
     # Relationships
-    wanted = db.relationship('VillagersWanted', back_populates='notes')
-    villager = db.relationship('Villagers', back_populates='notes')
+    wanted = db.relationship('VillagersWanted', back_populates='notes', foreign_keys=[wanted_id])
+    villager = db.relationship('Villager', back_populates='notes', foreign_keys=[villager_id])
 
     def __init__(self, notes, wanted_id, villager_id):
         self.notes = notes
