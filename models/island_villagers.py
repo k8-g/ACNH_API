@@ -5,7 +5,7 @@ class IslandVillagers(db.Model):
 
     island_villagers_id = db.Column(db.Integer, primary_key=True)
     island_id = db.Column(db.Integer, db.ForeignKey('islands.island_id'), nullable=False)
-    villager_id = db.Column(db.Integer, db.ForeignKey('villager.villager_id'), nullable=False)
+    villager_id = db.Column(db.Integer, db.ForeignKey('villagers.villager_id'), nullable=False)
     comment_id = db.Column(db.Integer, db.ForeignKey('comments.comments_id'))
 
     # Relationships
