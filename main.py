@@ -30,7 +30,7 @@ def create_app():
     
     # Import models to ensure they are registered with SQLAlchemy
     from models.island import IslandUser
-    from models.villager import Villager
+    from models.villager import Villagers
     from models.island_villagers import IslandVillagers
     from models.villagers_wanted import VillagersWanted
     from models.comments import Comments
