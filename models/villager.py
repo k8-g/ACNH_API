@@ -1,4 +1,4 @@
-from init import db, ma
+from init import db
 
 class Villager(db.Model):
     __tablename__ = "villager"
@@ -10,3 +10,8 @@ class Villager(db.Model):
     birthday = db.Column(db.String, nullable=False)
     catchphrase = db.Column(db.String, nullable=False)
     hobbies = db.Column(db.String, nullable=False)
+
+    # Relationships
+    island_villagers = db.relationship('IslandVillagers', back_populates='villager')
+    wanted = db.relationship('VillagersWanted', back_populates='villager')
+    notes = db.relationship('Notes', back_populates='villager')
