@@ -1,4 +1,4 @@
-from init import db, ma
+from init import ma
 
 
 class IslandSchema(ma.Schema):
