@@ -9,7 +9,7 @@ class Comments(db.Model):
     island_comments = db.Column(db.Text, nullable=False)
 
     # Relationships
-    island_villager = db.relationship('IslandVillagers', back_populates='comments')
+    island_villagers = db.relationship('IslandVillagers', back_populates='comments')
     wanted = db.relationship('VillagersWanted', back_populates='comments')
 
     def __init__(self, island_comments, island_villagers_id=None, wanted_id=None):
