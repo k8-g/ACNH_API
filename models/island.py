@@ -2,7 +2,7 @@ from init import db, bcrypt
 
 class IslandUser(db.Model):
     # name of the table
-    __tablename__ = "Island"
+    __tablename__ = "islands"
 
     island_id = db.Column(db.Integer, primary_key=True)
     name_of_island = db.Column(db.String, nullable=False)
