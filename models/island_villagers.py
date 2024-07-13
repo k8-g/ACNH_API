@@ -9,9 +9,9 @@ class IslandVillagers(db.Model):
     comment_id = db.Column(db.Integer, db.ForeignKey('comments.comments_id'))
 
     # Relationships
-    island = db.relationship('IslandUser', backref=db.backref('island_villagers', lazy=True))
-    villager = db.relationship('Villager', backref=db.backref('island_villagers', lazy=True))
-    comment = db.relationship('Comments', backref=db.backref('island_villagers', lazy=True))
+    island = db.relationship('IslandUser', back_populates='island_villagers')
+    villager = db.relationship('Villager', back_populates='island_villagers')
+    comment = db.relationship('Comments', back_populates='island_villager')
 
     def __init__(self, island_id, villager_id, comment_id=None):
         self.island_id = island_id
