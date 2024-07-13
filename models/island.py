@@ -2,7 +2,7 @@ from init import db, bcrypt
 
 class IslandUser(db.Model):
     # name of the table
-    __tablename__ = "Island"
+    __tablename__ = "islands"
 
     island_id = db.Column(db.Integer, primary_key=True)
     name_of_island = db.Column(db.String, nullable=False)
@@ -11,8 +11,8 @@ class IslandUser(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
     # Back reference to IslandVillagers and VillagersWanted
-    island_villagers = db.relationship('IslandVillagers', back_populates='island')
-    wanted = db.relationship('VillagersWanted', back_populates='island')
+    island_villagers = db.relationship('IslandVillagers', back_populates='islands')
+    wanted = db.relationship('VillagersWanted', back_populates='islands')
 
     def __init__(self, name_of_island, owner_of_island, password, is_admin=False):
         self.name_of_island = name_of_island
