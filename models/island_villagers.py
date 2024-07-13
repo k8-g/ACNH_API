@@ -11,7 +11,7 @@ class IslandVillagers(db.Model):
     # Relationships
     island = db.relationship('IslandUser', back_populates='island_villagers')
     villager = db.relationship('Villager', back_populates='island_villagers')
-    comment = db.relationship('Comments', back_populates='island_villagers')
+    comments = db.relationship('Comments', back_populates='island_villager', foreign_keys=[comment_id])
 
     def __init__(self, island_id, villager_id, comment_id=None):
         self.island_id = island_id
