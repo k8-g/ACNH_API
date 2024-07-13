@@ -1,7 +1,7 @@
 from init import db
 
-class Villagers(db.Model):
-    __tablename__ = "villagers"
+class Villager(db.Model):
+    __tablename__ = "villagerfl"
 
     villager_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
