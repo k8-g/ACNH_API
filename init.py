@@ -9,3 +9,5 @@ db = SQLAlchemy()
 ma = Marshmallow()
 bcrypt = Bcrypt()
 jwt = JWTManager()
+
+import models
