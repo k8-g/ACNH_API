@@ -23,8 +23,11 @@ def create_app():
 
     from controllers.auth_controller import auth_bp
     app.register_blueprint(auth_bp)
-    
 
+    from controllers.island_controller import island_bp
+    app.register_blueprint(island_bp, url_prefix='/')
+    
+    
     # Import models to ensure they are registered with SQLAlchemy
     from models.island import IslandUser
     from models.villager import Villager
