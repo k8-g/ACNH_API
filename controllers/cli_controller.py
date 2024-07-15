@@ -26,6 +26,12 @@ def seed_tables():
             password=bcrypt.generate_password_hash("123456").decode("utf-8"),
             is_admin=True
         ),
+        Island(
+            name_of_island="Second Island",
+            owner_of_island="Katherine",
+            password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+            is_admin=False
+        ),
         # Add more Islands as needed
     ]
     
