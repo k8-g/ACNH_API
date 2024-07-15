@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from init import db
 from models.note import Note
-from schemas.notes import notes_schema, note_schema
+from schemas.note import notes_schema, note_schema
 from flask_jwt_extended import jwt_required
 
 # Create a blueprint
