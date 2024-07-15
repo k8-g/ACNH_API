@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask import Blueprint, request
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
@@ -59,13 +60,18 @@ def login():
     owner_of_island = data.get('owner_of_island')
     password = data.get('password')
 
+    # find the user/island in DB with that owner name
+    stmt = db.select(Island).filter_by(owner_of_island=data.get("owner_of_island"))
+    user = db.session.scalar(stmt)
+
     user = Island.query.filter_by(owner_of_island=owner_of_island).first()
     # if user exists and password matches
     if user and bcrypt.check_password_hash(user.password, password):
         # create jwt
-        access_token = create_access_token(identity={'owner_of_island': user.owner_of_island, 'is_admin': user.is_admin})
+        token = create_access_token(identity=str({'owner_of_island': user.owner_of_island}), expires_delta=timedelta(days=1))
+        # 'is_admin': user.is_admin
         # respond back
-        return {"access_token": access_token}, 200
+        return {"owner_of_island": user.owner_of_island, "is_admin": user.is_admin, "token": token}, 200
     else:
         # respond back with an error message
-        return {"message": "Incorrect password or name."}, 401
+        return {"error": "Incorrect password or owner name."}, 401
