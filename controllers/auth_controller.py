@@ -30,14 +30,18 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
+    # get the data from the body of the request
     data = request.get_json()
     owner_of_island = data.get('owner_of_island')
     password = data.get('password')
 
     user = Island.query.filter_by(owner_of_island=owner_of_island).first()
-
+    # if user exists and password matches
     if user and bcrypt.check_password_hash(user.password, password):
+        # create jwt
         access_token = create_access_token(identity={'owner_of_island': user.owner_of_island, 'is_admin': user.is_admin})
+        # respond back
         return {"access_token": access_token}, 200
     else:
+        # respond back with an error message
         return {"message": "Incorrect password or name."}, 401
