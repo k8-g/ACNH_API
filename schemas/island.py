@@ -5,8 +5,8 @@ class IslandSchema(ma.Schema):
     class Meta:
         fields = ("island_id", "name_of_island", "owner_of_island", "password", "is_admin")
 
-    island_villagers = fields.List(fields.Nested('IslandVillagersSchema', exclude=('island',)))
-    wanted = fields.List(fields.Nested('VillagersWantedSchema', exclude=('island',)))
+    # island_villagers = fields.List(fields.Nested('IslandVillagersSchema', exclude=('island',)))
+    # wanted = fields.List(fields.Nested('VillagersWantedSchema', exclude=('island',)))
 
 # to handle a single island object
 island_schema = IslandSchema(exclude=["password"])

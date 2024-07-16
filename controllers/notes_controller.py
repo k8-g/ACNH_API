@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from init import db
-from models.notes import Notes
-from schemas.notes import notes_schema, note_schema
+from models.note import Note
+from schemas.note import notes_schema, note_schema
 from flask_jwt_extended import jwt_required
 
 # Create a blueprint
@@ -9,21 +9,21 @@ notes_bp = Blueprint('notes', __name__)
 
 @notes_bp.route('/notes', methods=['GET'])
 def get_notes():
-    notes = Notes.query.all()
+    notes = Note.query.all()
     return notes_schema.dump(notes), 200
 
 @notes_bp.route('/notes/<int:id>', methods=['GET'])
 def get_note(id):
-    note = Notes.query.get_or_404(id)
+    note = Note.query.get_or_404(id)
     return note_schema.dump(note), 200
 
 @notes_bp.route('/notes', methods=['POST'])
 @jwt_required()
 def add_note():
     data = request.get_json()
-    new_note = Notes(
-        wanted_id=data['wanted_id'],
-        villager_id=data['villager_id'],
+    new_note = Note(
+        # wanted_id=data['wanted_id'],
+        # villager_id=data['villager_id'],
         notes=data['notes']
     )
     db.session.add(new_note)
@@ -33,10 +33,10 @@ def add_note():
 @notes_bp.route('/notes/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_note(id):
-    note = Notes.query.get_or_404(id)
+    note = Note.query.get_or_404(id)
     data = request.get_json()
-    note.wanted_id = data['wanted_id']
-    note.villager_id = data['villager_id']
+    # note.wanted_id = data['wanted_id']
+    # note.villager_id = data['villager_id']
     note.notes = data['notes']
     db.session.commit()
     return note_schema.dump(note), 200
@@ -44,7 +44,7 @@ def update_note(id):
 @notes_bp.route('/notes/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_note(id):
-    note = Notes.query.get_or_404(id)
+    note = Note.query.get_or_404(id)
     db.session.delete(note)
     db.session.commit()
     return {"message": "Note deleted"}, 200

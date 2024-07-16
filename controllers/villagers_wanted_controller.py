@@ -22,12 +22,12 @@ def get_villager_wanted(id):
 def add_villager_wanted():
     data = request.get_json()
     new_villager_wanted = VillagersWanted(
-        villager_id=data['villager_id'],
-        island_id=data['island_id'],
+        # villager_id=data['villager_id'],
+        # island_id=data['island_id'],
         item_name=data['item_name'],
         requirement_description=data['requirement_description'],
-        required_materials=data['required_materials'],
-        notes_id=data.get('notes_id', None)
+        required_materials=data['required_materials']
+        # notes_id=data.get('notes_id', None)
     )
     db.session.add(new_villager_wanted)
     db.session.commit()
@@ -38,12 +38,12 @@ def add_villager_wanted():
 def update_villager_wanted(id):
     villager_wanted = VillagersWanted.query.get_or_404(id)
     data = request.get_json()
-    villager_wanted.villager_id = data['villager_id']
-    villager_wanted.island_id = data['island_id']
+    # villager_wanted.villager_id = data['villager_id']
+    # villager_wanted.island_id = data['island_id']
     villager_wanted.item_name = data['item_name']
     villager_wanted.requirement_description = data['requirement_description']
     villager_wanted.required_materials = data['required_materials']
-    villager_wanted.notes_id = data.get('notes_id', villager_wanted.notes_id)
+    # villager_wanted.notes_id = data.get('notes_id', villager_wanted.notes_id)
     db.session.commit()
     return villager_wanted_schema.dump(villager_wanted), 200
 

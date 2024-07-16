@@ -2,7 +2,7 @@ from flask import Blueprint
 
 from init import db, bcrypt
 
-from models.island import IslandUser
+from models.island import Island
 
 db_commands = Blueprint("db", __name__)
 
@@ -20,11 +20,17 @@ def drop_tables():
 def seed_tables():
     # Example seed data
     islands = [
-        IslandUser(
+        Island(
             name_of_island="Zorlandia",
             owner_of_island="Kate",
             password=bcrypt.generate_password_hash("123456").decode("utf-8"),
             is_admin=True
+        ),
+        Island(
+            name_of_island="Second Island",
+            owner_of_island="Katherine",
+            password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+            is_admin=False
         ),
         # Add more Islands as needed
     ]
