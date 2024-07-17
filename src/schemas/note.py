@@ -8,7 +8,7 @@ class NoteSchema(ma.Schema):
 
     class Meta:
 
-        fields = ("owner", "villager_id", "note_id", "notes")
+        fields = ("owner", "villager_id", "villager", "note_id", "note")
 
 # to handle a single note object
 note_schema = NoteSchema()

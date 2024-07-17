@@ -54,7 +54,7 @@ def seed_tables():
         Note(
             island_id="1",
             villager_id="430",
-            note=""
+            note="She is pretty"
         )
     ]
     # ALWAYS PUT COMMA AFTER EACH LINE ^
