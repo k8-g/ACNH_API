@@ -2,13 +2,13 @@ from init import ma
 from marshmallow import fields
 
 class NoteSchema(ma.Schema):
+
+    owner = fields.Nested('IslandSchema', only=["owner_of_island", "name_of_island"])
+    villager = fields.Nested('VillagerSchema', only=["name"])
+
     class Meta:
-        fields = ("note_id", "notes")
 
-        # fields = ("notes_id", "wanted_id", "villager_id", "notes")
-
-    # wanted = fields.Nested('VillagersWantedSchema', exclude=('notes',))
-    # villager = fields.Nested('VillagerSchema', exclude=('notes',))
+        fields = ("owner", "villager_id", "note_id", "notes")
 
 # to handle a single note object
 note_schema = NoteSchema()

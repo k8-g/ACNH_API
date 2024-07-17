@@ -4,15 +4,11 @@ class Note(db.Model):
     __tablename__ = "note"
 
     note_id = db.Column(db.Integer, primary_key=True)
-    # wanted_id = db.Column(db.Integer, db.ForeignKey('villagers_wanted.wanted_id', name='fk_notes_wanted'))
-    # villager_id = db.Column(db.Integer, db.ForeignKey('villagers.villager_id', name='fk_notes_villager'))
-    note = db.Column(db.Text, nullable=False)
+    note = db.Column(db.String)
 
-    # Relationships
-    # wanted = db.relationship('VillagersWanted', back_populates='notes', foreign_keys=[wanted_id])
-    # villager = db.relationship('Villager', back_populates='notes', foreign_keys=[villager_id])
+    island_id = db.Column(db.Integer, db.ForeignKey('island.island_id'), nullable=False)
+    villager_id = db.Column(db.Integer, db.ForeignKey('villager.villager_id'), nullable=False)
+    # wanted_id = db.Column(db.Integer, db.ForeignKey('villagers_wanted.wanted_id', nullable=False)
 
-    # def __init__(self, notes, wanted_id, villager_id):
-    #     self.notes = notes
-    #     self.wanted_id = wanted_id
-    #     self.villager_id = villager_id
+    owner = db.relationship('Island', back_populates='notes')
+    villager = db.relationship('Villager', back_populates='notes')
