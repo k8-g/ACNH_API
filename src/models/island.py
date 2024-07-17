@@ -3,7 +3,7 @@ from init import db
 
 class Island(db.Model):
     # name of the table
-    __tablename__ = "Island"
+    __tablename__ = "island"
 
     # attributes of the table
     island_id = db.Column(db.Integer, primary_key=True)

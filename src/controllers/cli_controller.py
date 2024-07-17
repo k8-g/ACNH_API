@@ -4,6 +4,7 @@ from init import db, bcrypt
 
 from models.island import Island
 from models.villager import Villager
+from models.note import Note
 
 db_commands = Blueprint("db", __name__)
 
@@ -48,10 +49,19 @@ def seed_tables():
             hobbies="music"
         )
     ]
-
+    
+    note = [
+        Note(
+            island_id="1",
+            villager_id="430",
+            note=""
+        )
+    ]
+    # ALWAYS PUT COMMA AFTER EACH LINE ^
 
     # Add islands to the database session
     db.session.add_all(islands)
     db.session.add_all(villagers)
+    db.session.add_all(note)
     db.session.commit()
     print("Tables seeded")
