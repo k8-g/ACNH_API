@@ -5,46 +5,70 @@ from schemas.note import notes_schema, note_schema
 from flask_jwt_extended import jwt_required
 
 # Create a blueprint
-notes_bp = Blueprint('notes', __name__)
+notes_bp = Blueprint("notes", __name__, url_prefix="/notes")
 
-@notes_bp.route('/notes', methods=['GET'])
-def get_notes():
-    notes = Note.query.all()
-    return notes_schema.dump(notes), 200
+# /notes - GET - fetch all notes
+# /notes/<id> - GET - fetch a single note
+# /notes - POST - create a new note
+# /notes/<id> - DELETE - delete a note
+# /notes/<id> - PUT, PATCH - edit a note
 
-@notes_bp.route('/notes/<int:id>', methods=['GET'])
-def get_note(id):
-    note = Note.query.get_or_404(id)
-    return note_schema.dump(note), 200
+# /notes - GET
+@notes_bp.route("/notes", methods=['GET'])
+def get_all_notes():
+    stmt = db.select(Note)
+    notes = db.session.scalars(stmt)
+    # notes = Note.query.all()
+    return notes_schema.dump(notes)
 
-@notes_bp.route('/notes', methods=['POST'])
-@jwt_required()
-def add_note():
-    data = request.get_json()
-    new_note = Note(
-        # wanted_id=data['wanted_id'],
-        # villager_id=data['villager_id'],
-        notes=data['notes']
-    )
-    db.session.add(new_note)
-    db.session.commit()
-    return note_schema.dump(new_note), 201
 
-@notes_bp.route('/notes/<int:id>', methods=['PUT'])
-@jwt_required()
-def update_note(id):
-    note = Note.query.get_or_404(id)
-    data = request.get_json()
-    # note.wanted_id = data['wanted_id']
-    # note.villager_id = data['villager_id']
-    note.notes = data['notes']
-    db.session.commit()
-    return note_schema.dump(note), 200
+# /notes/<id> - GET - fetch a single note
+@notes_bp.route("/notes/<int:note_id>", methods=['GET'])
+def get_one_note(note_id):
+    stmt = db.select(Note).filter_by(note_id=note_id)
+    note = db.session.scalar(stmt)
+    if note:
+        return note_schema.dump(note)
+    else:
+        return {"error": f"Note with id {note_id} not found"}, 404
+    # note = Note.query.get_or_404(id)
+ 
+# /notes - POST - create a new note
+# @notes_bp.route("/notes/>", methods=['POST'])
+#     def create_note():
 
-@notes_bp.route('/notes/<int:id>', methods=['DELETE'])
-@jwt_required()
-def delete_note(id):
-    note = Note.query.get_or_404(id)
-    db.session.delete(note)
-    db.session.commit()
-    return {"message": "Note deleted"}, 200
+
+
+
+
+# @notes_bp.route('/notes', methods=['POST'])
+# @jwt_required()
+# def add_note():
+#     data = request.get_json()
+#     new_note = Note(
+#         # wanted_id=data['wanted_id'],
+#         # villager_id=data['villager_id'],
+#         notes=data['notes']
+#     )
+#     db.session.add(new_note)
+#     db.session.commit()
+#     return note_schema.dump(new_note), 201
+
+# @notes_bp.route('/notes/<int:id>', methods=['PUT'])
+# @jwt_required()
+# def update_note(id):
+#     note = Note.query.get_or_404(id)
+#     data = request.get_json()
+#     # note.wanted_id = data['wanted_id']
+#     # note.villager_id = data['villager_id']
+#     note.notes = data['notes']
+#     db.session.commit()
+#     return note_schema.dump(note), 200
+
+# @notes_bp.route('/notes/<int:id>', methods=['DELETE'])
+# @jwt_required()
+# def delete_note(id):
+#     note = Note.query.get_or_404(id)
+#     db.session.delete(note)
+#     db.session.commit()
+#     return {"message": "Note deleted"}, 200

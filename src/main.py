@@ -30,6 +30,9 @@ def create_app():
     from controllers.villager_controller import villager_bp
     app.register_blueprint(villager_bp, url_prefix='/')
     
+    from controllers.notes_controller import notes_bp
+    app.register_blueprint(notes_bp, url_prefix='/')
+
     # from controllers.island_villagers_controller import island_villagers_bp
     # app.register_blueprint(island_villagers_bp)
 
@@ -39,8 +42,7 @@ def create_app():
     # from controllers.comments_controller import comments_bp
     # app.register_blueprint(comments_bp)
 
-    # from controllers.notes_controller import notes_bp
-    # app.register_blueprint(notes_bp)
+
     
     
     # Import models to ensure they are registered with SQLAlchemy
