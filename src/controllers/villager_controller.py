@@ -24,6 +24,7 @@ def add_villager():
     new_villager = Villager(
         name=data['name'],
         species=data['species'],
+        gender=data['gender'],
         personality=data['personality'],
         birthday=data['birthday'],
         catchphrase=data['catchphrase'],
@@ -39,6 +40,7 @@ def update_villager(id):
     villager = Villager.query.get_or_404(id)
     data = request.get_json()
     villager.name = data['name']
+    villager.gender = data['gender']
     villager.species = data['species']
     villager.personality = data['personality']
     villager.birthday = data['birthday']
