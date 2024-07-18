@@ -42,6 +42,7 @@ def register_user():
         # create an instance of the Island model
         user = User(
             name=body_data.get("name"),
+            email=body_data.get("email")
             )
         # extract the password from the body
         password = body_data.get("password")
@@ -72,9 +73,9 @@ def register_user():
         return user_schema.dump(user), 201
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return {"error": f"Missing info; {err.orig.diag.column_name} is required"}, 409
+            return {"error": f"Missing information; {err.orig.diag.column_name} is required"}, 409
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
-            return {"error": "Name already in use"}, 409
+            return {"error": "Email address already in use"}, 409
 
 
 @auth_bp.route('/login', methods=['POST'])
@@ -85,7 +86,7 @@ def login_user():
     # password = data.get('password')
 
     # find the user/island in DB with that owner name
-    stmt = db.select(User).filter_by(name=body_data.get("name"))
+    stmt = db.select(User).filter_by(email=body_data.get("email"))
     user = db.session.scalar(stmt)
 
     # user = User.query.filter_by(name=name).first()
@@ -95,7 +96,7 @@ def login_user():
         # create jwt
         # token = create_access_token(identity=str({'user_id': user.id, 'name': user.name}), expires_delta=timedelta(days=1))
         token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
-        return {"name": user.name, "is_admin": user.is_admin, "token": token}, 200
+        return {"name": user.name, "email": user.email, "is_admin": user.is_admin, "token": token}, 200
     else:
         # respond back with an error message
-        return {"error": "Incorrect password or name."}, 401
+        return {"error": "Incorrect email or password."}, 401
