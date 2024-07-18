@@ -25,14 +25,14 @@ def create_app():
     app.register_blueprint(auth_bp)
 
     from controllers.island_controller import island_bp
-    app.register_blueprint(island_bp, url_prefix='/')
-    
+    app.register_blueprint(island_bp)
+    # url_prefix='/'
     from controllers.villager_controller import villager_bp
-    app.register_blueprint(villager_bp, url_prefix='/')
-    
+    app.register_blueprint(villager_bp)
+    # url_prefix='/'
     from controllers.notes_controller import notes_bp
-    app.register_blueprint(notes_bp, url_prefix='/')
-
+    app.register_blueprint(notes_bp)
+    # url_prefix='/'
     # from controllers.island_villagers_controller import island_villagers_bp
     # app.register_blueprint(island_villagers_bp)
 

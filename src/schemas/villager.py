@@ -2,8 +2,11 @@ from init import ma
 from marshmallow import fields
 
 class VillagerSchema(ma.Schema):
+
+    user = fields.Nested('UserSchema', only=["name"])
+
     class Meta:
-        fields = ("villager_id", "name", "species", "personality", "birthday", "catchphrase", "hobbies")
+        fields = ("villager_id", "name", "gender", "species", "personality", "birthday", "catchphrase", "hobbies", "user")
 
     # island_villagers = fields.List(fields.Nested('IslandVillagersSchema', exclude=('villager',)))
     # wanted = fields.List(fields.Nested('VillagersWantedSchema', exclude=('villager',)))
