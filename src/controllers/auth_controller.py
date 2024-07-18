@@ -69,8 +69,6 @@ def login():
     if user and bcrypt.check_password_hash(user.password, password):
         # create jwt
         token = create_access_token(identity=str({'owner_of_island': user.owner_of_island}), expires_delta=timedelta(days=1))
-        # 'is_admin': user.is_admin
-        # respond back
         return {"owner_of_island": user.owner_of_island, "is_admin": user.is_admin, "token": token}, 200
     else:
         # respond back with an error message
