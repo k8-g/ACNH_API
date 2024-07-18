@@ -2,9 +2,10 @@ from flask import Blueprint
 
 from init import db, bcrypt
 
+from models.user import User
 from models.island import Island
-from models.villager import Villager
-from models.note import Note
+# from models.villager import Villager
+# from models.note import Note
 
 db_commands = Blueprint("db", __name__)
 
@@ -21,47 +22,57 @@ def drop_tables():
 @db_commands.cli.command("seed")
 def seed_tables():
     # Example seed data
-    islands = [
-        Island(
-            name_of_island="Zorlandia",
-            owner_of_island="Kate",
-            password=bcrypt.generate_password_hash("123456").decode("utf-8"),
-            is_admin=True
-        ),
-        # Island(
-        #     name_of_island="Second Island",
-        #     owner_of_island="Katherine",
-        #     password=bcrypt.generate_password_hash("123456").decode("utf-8"),
-        #     is_admin=False
-        # ),
-        # Add more Islands as needed
+    users = [
+    User(
+        #user 0
+        name="Kate",
+        password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+        is_admin=True
+    ),
+    # User(
+    #     # user 1
+    #     name="Isaboo",
+    #     password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+    # )
     ]
 
-    villagers = [
-        Villager(
-            villager_id="430",
-            name="Judy",
-            gender="Female",
-            species="Bear cub",
-            personality="Snooty",
-            birthday="March 10",
-            catchphrase="myohmy",
-            hobbies="music"
-        )
-    ]
+    # islands = [
+    #     Island(
+    #         island_name="Zorlandia"
+    #     ),
+    #     Island(
+    #         island_name="PuppyLand"
+    #     ),
+    # ]
+
+    # villagers = [
+    #     Villager(
+    #         user_id=users[0].user_id,
+    #         island_id=islands[0].island_id,
+    #         villager_id="430",
+    #         name="Judy",
+    #         gender="Female",
+    #         species="Bear cub",
+    #         personality="Snooty",
+    #         birthday="March 10",
+    #         catchphrase="myohmy",
+    #         hobbies="music"
+    #     )
+    # ]
     
-    note = [
-        Note(
-            island_id="1",
-            villager_id="430",
-            note="She is pretty"
-        )
-    ]
+    # note = [
+    #     Note(
+    #         island_id="1",
+    #         villager_id="430",
+    #         note="She is pretty"
+    #     )
+    # ]
     # ALWAYS PUT COMMA AFTER EACH LINE ^
 
     # Add islands to the database session
-    db.session.add_all(islands)
-    db.session.add_all(villagers)
-    db.session.add_all(note)
+    db.session.add_all(users)
+    # db.session.add_all(islands)
+    # db.session.add_all(villagers)
+    # db.session.add_all(note)
     db.session.commit()
     print("Tables seeded")

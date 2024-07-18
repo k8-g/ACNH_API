@@ -1,23 +1,28 @@
 from flask import Blueprint, request
-from init import db
-from models.villager import Villager
-from schemas.villager import villager_schema, villagers_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from init import db
+
+from models.villager import Villager
+from schemas.villager import villager_schema, villagers_schema
+
+
 # Create a blueprint
-villager_bp = Blueprint('villager', __name__)
+villager_bp = Blueprint('villager', __name__, url_prefix="/villagers")
 
 # /villagers - GET - fetch all villagers - R
-@villager_bp.route('/villagers', methods=['GET'])
+@villager_bp.route("/", methods=["GET"])
 def get_all_villagers():
-    stmt = db.select(Villager).order_by(Villager.villager_id.asc())
+    # stmt = db.select(Villager).order_by(Villager.villager_id.asc())
+    stmt = db.select(Villager)
     villagers = db.session.scalars(stmt)
     # notes = Note.query.all()
     return villagers_schema.dump(villagers)
 
 # /villagers/<id> - GET - fetch a single villager - R
-@villager_bp.route('/villagers/<int:villager_id>', methods=['GET'])
+@villager_bp.route("/<int:villager_id>", methods=["GET"])
 def get_villager(villager_id):
+    # first id is the db id, second is the id above
     stmt = db.select(Villager).filter_by(villager_id=villager_id)
     villager = db.session.scalar(stmt)
     if villager:
@@ -26,10 +31,9 @@ def get_villager(villager_id):
         return {"error": f"Villager with id {villager_id} not found"}, 404 
 
 
-@villager_bp.route('/villagers', methods=['POST'])
-@jwt_required()
+@villager_bp.route("/", methods=["POST"])
+# @jwt_required()
 def create_villager():
-    
     body_data = request.get_json()
     villager = Villager(
         name=body_data.get("name"),
@@ -39,7 +43,7 @@ def create_villager():
         birthday=body_data.get("birthday"),
         catchphrase=body_data.get("catchphrase"),
         hobbies=body_data.get("hobbies"),
-        island_id=get_jwt_identity()
+        # user_id=get_jwt_identity()
     )
     db.session.add(villager)
     db.session.commit()
@@ -61,7 +65,7 @@ def create_villager():
     # return villager_schema.dump(new_villager), 201
 
 
-@villager_bp.route('/villagers/<int:villager_id>', methods=['DELETE'])
+@villager_bp.route("/<int:villager_id>", methods=["DELETE"])
 @jwt_required()
 def delete_villager(villager_id):
     stmt = db.select(Villager).filter_by(villager_id=villager_id)
@@ -74,16 +78,16 @@ def delete_villager(villager_id):
         return {"error": f"Villager with id {villager_id} not found"}, 404
 
 
-@villager_bp.route('/villagers/<int:villager_id>',  methods=['PUT','PATCH'])
+@villager_bp.route("/<int:villager_id>",  methods=["PUT","PATCH"])
 @jwt_required()
 def update_villager(villager_id):
     # get the data from the body of the request
     body_data = request.get_json()
     #below code wouldn't work
-    # stmt = db.session(Villager).filter_by(villager_id=villager_id)
+    stmt = db.session(Villager).filter_by(villager_id=villager_id)
     # get the villager from the db
-    # villager = db.session.scalar(stmt)
-    villager = Villager.query.filter_by(villager_id=villager_id).first()
+    villager = db.session.scalar(stmt)
+    # villager = Villager.query.filter_by(villager_id=villager_id).first()
 
     if villager:
         # update the fields required

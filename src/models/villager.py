@@ -12,7 +12,11 @@ class Villager(db.Model):
     catchphrase = db.Column(db.String, nullable=False)
     hobbies = db.Column(db.String, nullable=False)
 
-   # island_id = db.Column(db.Integer, db.ForeignKey('island_user.island_id'), nullable=False)
+    # foreign keys
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    island_id = db.Column(db.Integer, db.ForeignKey('island.island_id'), nullable=False)
 
-    notes = db.relationship('Note', back_populates="villager")
+    # field that has info about the user
+    user = db.relationship('User', back_populates='villagers')
+    # notes = db.relationship('Note', back_populates="villager")
     
