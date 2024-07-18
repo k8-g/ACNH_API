@@ -6,7 +6,7 @@ class Island(db.Model):
     __tablename__ = "island"
 
     # attributes of the table
-    island_id = db.Column(db.Integer, primary_key=True)
+    island_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name_of_island = db.Column(db.String, nullable=False)
     owner_of_island = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
