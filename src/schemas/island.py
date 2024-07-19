@@ -4,7 +4,7 @@ from marshmallow import fields
 class IslandSchema(ma.Schema):
 
     # notes = fields.List(fields.Nested('NoteSchema', exclude=["owner"]))
-    user = fields.Nested('UserSchema', only=["name"])
+    user = fields.Nested('UserSchema', only=["name","id"])
 
     class Meta:
         fields = ("island_id", "island_name", "user")

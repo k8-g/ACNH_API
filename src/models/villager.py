@@ -18,5 +18,6 @@ class Villager(db.Model):
 
     # field that has info about the user
     user = db.relationship('User', back_populates='villagers')
-    # notes = db.relationship('Note', back_populates="villager")
+    islands = db.relationship("Island", back_populates="villagers")
+    notes = db.relationship('Note', back_populates="villagers")
     

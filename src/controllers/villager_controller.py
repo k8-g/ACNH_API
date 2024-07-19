@@ -1,7 +1,7 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.villager import Villager
 from schemas.villager import villager_schema, villagers_schema
@@ -32,9 +32,15 @@ def get_villager(villager_id):
 
 
 @villager_bp.route("/", methods=["POST"])
-# @jwt_required()
+@jwt_required()
 def create_villager():
     body_data = request.get_json()
+    user_id=get_jwt_identity()
+
+    island_id = body_data.get('island_id')
+    if not island_id:
+        return {"error": "island_id is required"}, 400
+    
     villager = Villager(
         name=body_data.get("name"),
         species=body_data.get("species"),
@@ -44,6 +50,8 @@ def create_villager():
         catchphrase=body_data.get("catchphrase"),
         hobbies=body_data.get("hobbies"),
         # user_id=get_jwt_identity()
+        user_id=user_id,
+        island_id=island_id
     )
     db.session.add(villager)
     db.session.commit()
@@ -83,11 +91,14 @@ def delete_villager(villager_id):
 def update_villager(villager_id):
     # get the data from the body of the request
     body_data = request.get_json()
-    #below code wouldn't work
-    stmt = db.session(Villager).filter_by(villager_id=villager_id)
-    # get the villager from the db
-    villager = db.session.scalar(stmt)
-    # villager = Villager.query.filter_by(villager_id=villager_id).first()
+
+    # CODE BELOW DIDN'T WORK
+    # stmt = db.session(Villager).filter_by(villager_id=villager_id)
+    # # get the villager from the db
+    # villager = db.session.scalar(stmt)
+
+    # WORKS
+    villager = Villager.query.filter_by(villager_id=villager_id).first()
 
     if villager:
         # update the fields required

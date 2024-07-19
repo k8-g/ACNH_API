@@ -96,7 +96,7 @@ def login_user():
         # create jwt
         # token = create_access_token(identity=str({'user_id': user.id, 'name': user.name}), expires_delta=timedelta(days=1))
         token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
-        return {"name": user.name, "email": user.email, "is_admin": user.is_admin, "token": token}, 200
+        return {"name": user.name, "email": user.email, "id": user.id, "is_admin": user.is_admin, "token": token}, 200
     else:
         # respond back with an error message
         return {"error": "Incorrect email or password."}, 401

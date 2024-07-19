@@ -1,8 +1,11 @@
 from flask import Blueprint, request
+
 from init import db
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 from models.note import Note
 from schemas.note import notes_schema, note_schema
-from flask_jwt_extended import jwt_required
+
 
 # Create a blueprint
 notes_bp = Blueprint("notes", __name__, url_prefix="/notes")
@@ -14,7 +17,7 @@ notes_bp = Blueprint("notes", __name__, url_prefix="/notes")
 # /notes/<id> - PUT, PATCH - edit a note
 
 # /notes - GET
-@notes_bp.route("/notes", methods=['GET'])
+@notes_bp.route("/", methods=["GET"])
 def get_all_notes():
     stmt = db.select(Note)
     notes = db.session.scalars(stmt)
