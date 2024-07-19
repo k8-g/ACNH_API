@@ -5,7 +5,6 @@ class VillagersWantedSchema(ma.Schema):
     class Meta:
         fields = ("wanted_id", "item_name", "requirement_description", "required_materials")
 
-        # fields = ("wanted_id", "villager_id", "island_id", "item_name", "requirement_description", "required_materials", "notes_id")
 
     # villager = fields.Nested('VillagerSchema')
     # island = fields.Nested('IslandSchema', exclude=('island_villagers', 'wanted'))

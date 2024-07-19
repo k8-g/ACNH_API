@@ -17,21 +17,21 @@ class User(db.Model):
     islands = db.relationship("Island", back_populates="user")
     villagers = db.relationship('Villager', back_populates='user')
     notes = db.relationship('Note', back_populates="user")
-    # # comments = db.relationship("Comment", back_populates="user")
+    comments = db.relationship("Comment", back_populates="user")
 
 
 class UserSchema(ma.Schema):
     islands = fields.List(fields.Nested('IslandSchema', exclude=["user"]))
     villagers = fields.List(fields.Nested('VillagerSchema', exclude=["user"]))
- 
-    # comments = fields.List(fields.Nested('CommentSchema', exclude=["user"]))
+    comments = fields.List(fields.Nested('CommentSchema', exclude=["user"]))
+    island_villagers = fields.List(fields.Nested('IslandVillagerSchema'))
 
     # email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))
 
     # password = fields.String(required=True, validate=Regexp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", error="Minimum eight characters, at least one letter and one number"))
 
     class Meta:
-        fields = ("id", "name", "email", "password", "is_admin", "islands")
+        fields = ("id", "name", "email", "password", "is_admin", "islands", "comments")
 
 
 # to handle a single user object
