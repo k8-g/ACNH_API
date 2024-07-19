@@ -30,19 +30,23 @@ def seed_tables():
         password=bcrypt.generate_password_hash("123456").decode("utf-8"),
         is_admin=True
     ),
-    # User(
-    #     # user 1
-    #     name="Isaboo",
-    #     password=bcrypt.generate_password_hash("123456").decode("utf-8"),
-    # )
+    User(
+        # user 1
+        name="Isaboo",
+        email="isabelle@puppy.com",
+        password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+        #id 2
+    )
     ]
 
     # islands = [
+    #     # Island(
+    #     #     island_name="Zorlandia",
+    #     #     user_id=users[0].id
+    #     # ),
     #     Island(
-    #         island_name="Zorlandia"
-    #     ),
-    #     Island(
-    #         island_name="PuppyLand"
+    #         island_name="PuppyLand",
+    #         user_id=users[1].id
     #     ),
     # ]
 

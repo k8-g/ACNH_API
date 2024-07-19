@@ -7,9 +7,7 @@ class Island(db.Model):
     # attributes of the table
     island_id = db.Column(db.Integer, primary_key=True)
     island_name = db.Column(db.String, nullable=False)
-    # owner_of_island = db.Column(db.String, nullable=False, unique=True)
-    # password = db.Column(db.String, nullable=False)
-    # is_admin = db.Column(db.Boolean, default=False)
+
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
