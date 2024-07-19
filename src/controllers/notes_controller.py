@@ -26,7 +26,7 @@ def get_all_notes():
 
 
 # /notes/<id> - GET - fetch a single note
-@notes_bp.route("/notes/<int:note_id>", methods=['GET'])
+@notes_bp.route("/<int:note_id>", methods=['GET'])
 def get_one_note(note_id):
     stmt = db.select(Note).filter_by(note_id=note_id)
     note = db.session.scalar(stmt)
@@ -37,16 +37,9 @@ def get_one_note(note_id):
     # note = Note.query.get_or_404(id)
  
 # /notes - POST - create a new note
-# @notes_bp.route("/notes/>", methods=['POST'])
-#     def create_note():
-
-
-
-
-
-# @notes_bp.route('/notes', methods=['POST'])
+# @notes_bp.route("/", methods=["POST"])
 # @jwt_required()
-# def add_note():
+# def create_note():
 #     data = request.get_json()
 #     new_note = Note(
 #         # wanted_id=data['wanted_id'],

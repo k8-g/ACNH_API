@@ -39,7 +39,6 @@ def get_one_island(island_id):
         return {"error": f"Island with id {island_id} not found"}, 404
 
 
-# POST METHOD CODE DOESN'T WORK
 # /islands - POST - create a new island - C
 @island_bp.route("/", methods=['POST'])
 @jwt_required()
