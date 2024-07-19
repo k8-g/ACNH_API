@@ -1,5 +1,6 @@
 from init import db
 
+
 class Note(db.Model):
     __tablename__ = "note"
 

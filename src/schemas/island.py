@@ -5,9 +5,11 @@ class IslandSchema(ma.Schema):
 
     # notes = fields.List(fields.Nested('NoteSchema', exclude=["owner"]))
     user = fields.Nested('UserSchema', only=["name","id"])
+    comments = fields.List(fields.Nested('CommentSchema', exclude=["island"]))
 
+    # user and comments below link to above
     class Meta:
-        fields = ("island_id", "island_name", "user")
+        fields = ("island_id", "island_name", "user", "comments")
 
 
 # to handle a single island object

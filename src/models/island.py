@@ -12,5 +12,8 @@ class Island(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     user = db.relationship('User', back_populates='islands')
-    villagers = db.relationship('Villager', back_populates='islands')
-    notes = db.relationship('Note', back_populates="islands")
+    villagers = db.relationship('Villager', back_populates='island')
+    comments = db.relationship('Comment', back_populates='island')
+    # cascade part = if an island is deleted, the comments get deleted too
+    # comments = db.relationship('Comment', back_populates='island', cascade="all, delete")
+    # notes = db.relationship('Note', back_populates="islands")
