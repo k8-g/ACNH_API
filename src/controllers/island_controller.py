@@ -3,7 +3,6 @@ from flask import Blueprint, request
 from init import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-
 from models.island import Island
 from schemas.island import island_schema, islands_schema
 

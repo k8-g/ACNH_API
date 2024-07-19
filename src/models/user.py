@@ -16,6 +16,7 @@ class User(db.Model):
 
     islands = db.relationship("Island", back_populates="user")
     villagers = db.relationship('Villager', back_populates='user')
+    notes = db.relationship('Note', back_populates="user")
     # # comments = db.relationship("Comment", back_populates="user")
 
 
