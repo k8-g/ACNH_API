@@ -12,6 +12,5 @@ class Island(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     user = db.relationship('User', back_populates='islands')
-    # notes = db.relationship('Note', back_populates="owner")
-
-    # villagers = db.relationship('Villager', back_populates='island')
+    villagers = db.relationship('Villager', back_populates='islands')
+    notes = db.relationship('Note', back_populates="islands")
