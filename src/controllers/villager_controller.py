@@ -13,17 +13,16 @@ villager_bp = Blueprint('villager', __name__, url_prefix="/villagers")
 # /villagers - GET - fetch all villagers - R
 @villager_bp.route("/", methods=["GET"])
 def get_all_villagers():
-    # stmt = db.select(Villager).order_by(Villager.villager_id.asc())
+    stmt = db.select(Villager).order_by(Villager.id.asc())
     stmt = db.select(Villager)
     villagers = db.session.scalars(stmt)
-    # notes = Note.query.all()
     return villagers_schema.dump(villagers)
 
 # /villagers/<id> - GET - fetch a single villager - R
 @villager_bp.route("/<int:villager_id>", methods=["GET"])
 def get_villager(villager_id):
     # first id is the db id, second is the id above
-    stmt = db.select(Villager).filter_by(villager_id=villager_id)
+    stmt = db.select(Villager).filter_by(id=villager_id)
     villager = db.session.scalar(stmt)
     if villager:
         return villager_schema.dump(villager)
@@ -37,9 +36,9 @@ def create_villager():
     body_data = request.get_json()
     user_id=get_jwt_identity()
 
-    island_id = body_data.get('island_id')
-    if not island_id:
-        return {"error": "island_id is required"}, 400
+    # island_id = body_data.get('island_id')
+    # if not island_id:
+    #     return {"error": "island_id is required"}, 400
     
     villager = Villager(
         name=body_data.get("name"),
@@ -50,8 +49,8 @@ def create_villager():
         catchphrase=body_data.get("catchphrase"),
         hobbies=body_data.get("hobbies"),
         # user_id=get_jwt_identity()
-        user_id=user_id,
-        island_id=island_id
+        # user_id=user_id,
+        # island_id=island_id
     )
     db.session.add(villager)
     db.session.commit()
@@ -76,7 +75,7 @@ def create_villager():
 @villager_bp.route("/<int:villager_id>", methods=["DELETE"])
 @jwt_required()
 def delete_villager(villager_id):
-    stmt = db.select(Villager).filter_by(villager_id=villager_id)
+    stmt = db.select(Villager).filter_by(id=villager_id)
     villager = db.session.scalar(stmt)
     if villager:
         db.session.delete(villager)
@@ -98,11 +97,11 @@ def update_villager(villager_id):
     # villager = db.session.scalar(stmt)
 
     # WORKS
-    villager = Villager.query.filter_by(villager_id=villager_id).first()
+    villager = Villager.query.filter_by(id=villager_id).first()
 
     if villager:
         # update the fields required
-        villager.villager_id = body_data.get("villager_id") or villager.villager_id
+        villager.id = body_data.get("id") or villager.id
         villager.name = body_data.get("name") or villager.name
         villager.gender = body_data.get("gender") or villager.gender
         villager.species = body_data.get("species") or villager.species

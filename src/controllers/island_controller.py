@@ -31,7 +31,7 @@ def get_all_islands():
 @island_bp.route("/<int:island_id>", methods=['GET'])
 def get_one_island(island_id):
     # first id is the db id, second is the id above
-    stmt = db.select(Island).filter_by(island_id=island_id)
+    stmt = db.select(Island).filter_by(id=island_id)
     island = db.session.scalar(stmt)
     if island:
         return island_schema.dump(island)
@@ -64,7 +64,7 @@ def create_island():
 @jwt_required()
 def delete_island(island_id):
     # get island from the db
-    stmt = db.select(Island).filter_by(island_id=island_id)
+    stmt = db.select(Island).filter_by(id=island_id)
     island = db.session.scalar(stmt)
     # if island exists
     if island:
@@ -84,7 +84,7 @@ def update_island(island_id):
     # get the data from the body of the request
     body_data = request.get_json()
     # get the island from the db
-    stmt = db.select(Island).filter_by(island_id=island_id)
+    stmt = db.select(Island).filter_by(id=island_id)
     island = db.session.scalar(stmt)
     # if island exists
     if island:
