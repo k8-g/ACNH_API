@@ -6,7 +6,7 @@ from psycopg2 import errorcodes
 from flask_jwt_extended import create_access_token
 
 from init import db, bcrypt, jwt
-from models.user import User, user_schema
+from models.user import User, user_schema, UserSchema
 # from models.island import Island
 # from schemas.island import island_schema, IslandSchema
 
