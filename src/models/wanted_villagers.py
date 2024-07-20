@@ -8,8 +8,14 @@ class WantedVillagers(db.Model):
     island_id = db.Column(db.Integer, db.ForeignKey('island.id'), nullable=False)
     villager_id = db.Column(db.Integer, db.ForeignKey('villager.id'), nullable=False)
     
-    island = db.relationship('Island')
-    villager = db.relationship('Villager')
+    # island = db.relationship('Island')
+    # villager = db.relationship('Villager')
+
+    notes = db.relationship('Note', back_populates='wanted_villager')
+
+    island = db.relationship('Island', backref='wanted_villagers')
+    villager = db.relationship('Villager', backref='wanted_villagers')
+    # notes = db.relationship('Note', back_populates='wanted_villager')
 
     # island = db.relationship('Island', back_populates='wanted_villagers')
     # villager = db.relationship('Villager', back_populates='wanted_villagers')

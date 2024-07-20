@@ -7,12 +7,15 @@ class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     notes = db.Column(db.String, nullable=True)
 
-    wanted_villagers_id = db.Column(db.Integer, db.ForeignKey('wanted_villagers.id', nullable=False))
+    wanted_villagers_id = db.Column(db.Integer, db.ForeignKey('wanted_villagers.id'), nullable=False)
+
 
     # Relationship
-    wanted_villager = db.relationship('WantedVillager')
+    # wanted_villagers = db.relationship('WantedVillagers')
 
-    # wanted_villager = db.relationship('WantedVillager', back_populates='notes')
+    wanted_villager = db.relationship('WantedVillagers', back_populates='notes')
+
+
 
     # user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     # island_id = db.Column(db.Integer, db.ForeignKey('island.id'), nullable=False)

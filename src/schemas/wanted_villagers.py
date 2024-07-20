@@ -5,10 +5,11 @@ class WantedVillagerSchema(ma.Schema):
     
     island = fields.Nested('IslandSchema', only=["id", "island_name"])
     villager = fields.Nested('VillagerSchema', only=["id", "name"])
-    notes = fields.Nested('NoteSchema', exclude=["wanted_vilager"])
+    # notes = fields.Nested('NoteSchema', exclude=["wanted_vilager"])
+    notes = fields.Nested('NoteSchema', many=True, exclude=["wanted_villager"])
 
     class Meta:
-        fields = ("id", "island", "villager")
+        fields = ("id", "island", "villager", "notes")
         # fields = ("id", "island", "villager", "notes")
 
 
