@@ -10,4 +10,9 @@ ma = Marshmallow()
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
-# import models
+from models.user import User
+from models.island import Island
+from models.villager import Villager
+from models.wanted_villagers import WantedVillagers
+from models.note import Note
+from models.island_villager import IslandVillager
