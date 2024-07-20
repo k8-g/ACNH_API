@@ -35,7 +35,6 @@ def seed_tables():
         name="Isaboo",
         email="isabelle@puppy.com",
         password=bcrypt.generate_password_hash("123456").decode("utf-8"),
-        #id 2
     )
     ]
 
