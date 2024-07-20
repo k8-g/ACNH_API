@@ -24,6 +24,7 @@ notes_bp = Blueprint("notes", __name__, url_prefix="/<int:wanted_villagers_id>/n
 # @jwt_required()
 def create_note(wanted_villagers_id):
     body_data = request.get_json()
+    wanted_villagers_id = body_data.get('wanted_villagers_id')
     # fetch the wanted villager with that particular id - wanted_villager_id
     stmt = db.select(WantedVillagers).filter_by(id=wanted_villagers_id)
     wanted_villager = db.session.scalar(stmt)
@@ -33,6 +34,7 @@ def create_note(wanted_villagers_id):
         note = Note(
             notes=body_data.get("notes"),
             # wanted_villager=wanted_villager
+            wanted_villagers_id=wanted_villagers_id
         )
         # add and commit
         db.session.add(note)
