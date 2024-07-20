@@ -1,14 +1,15 @@
 from flask import Blueprint, request
-
-from init import db
 from flask_jwt_extended import jwt_required
 
+from init import db
 from models.wanted_villagers import WantedVillagers
 from schemas.wanted_villagers import wanted_villager_schema, wanted_villagers_schema
-
+# from controllers.notes_controller import notes_bp
 
 # Create a blueprint
 wanted_villagers_bp = Blueprint('wanted_villagers', __name__, url_prefix="/wanted_villagers")
+# wanted_villagers_bp.register_blueprint(notes_bp)
+
 
 @wanted_villagers_bp.route('/', methods=['GET'])
 def get_wanted_villagers():

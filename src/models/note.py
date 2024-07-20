@@ -7,7 +7,7 @@ class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     notes = db.Column(db.String, nullable=True)
 
-    wanted_id = db.Column(db.Integer, db.ForeignKey('wanted_villagers.id', nullable=False))
+    wanted_villagers_id = db.Column(db.Integer, db.ForeignKey('wanted_villagers.id', nullable=False))
 
     # Relationship
     wanted_villager = db.relationship('WantedVillager')
