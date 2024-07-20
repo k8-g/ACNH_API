@@ -28,7 +28,7 @@ def get_all_notes():
 # /notes/<id> - GET - fetch a single note
 @notes_bp.route("/<int:note_id>", methods=['GET'])
 def get_one_note(note_id):
-    stmt = db.select(Note).filter_by(note_id=note_id)
+    stmt = db.select(Note).filter_by(id=note_id)
     note = db.session.scalar(stmt)
     if note:
         return note_schema.dump(note)
