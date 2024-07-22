@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
 from models.wanted_villagers import WantedVillagers
@@ -42,22 +42,38 @@ def add_wanted_villager():
 @wanted_villagers_bp.route('/<int:wanted_villagers_id>', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_wanted_villager(wanted_villagers_id):
-    # wanted_villagers = WantedVillagers.query.get_or_404(id)
     body_data = request.get_json()
     wanted_villagers = WantedVillagers.query.filter_by(id=wanted_villagers_id).first()
+    # , partial=True 
+
+    wanted_villager = WantedVillagers(
+        island_id=body_data.get('island_id'), 
+        villager_id=body_data.get('villager_id'),  
+    )
+
+    if wanted_villagers:
+        user_id = get_jwt_identity()
+    # if the user is the owner of the island
+    if str(wanted_villagers.island.user_id) != user_id:
+        return {"error": "You are not the owner of this island's wanted villager list."}, 403
+    
     db.session.commit()
-    return wanted_villager_schema.dump(wanted_villagers), 200
+    return wanted_villager_schema.dump(wanted_villager), 200
 
 @wanted_villagers_bp.route('/<int:wanted_villagers_id>', methods=['DELETE'])
 @jwt_required()
 def delete_wanted_villager(wanted_villagers_id):
-    # wanted_villagers = WantedVillagers.query.get_or_404(id)
     stmt = db.select(WantedVillagers).filter_by(id=wanted_villagers_id)
     wanted_villagers = db.session.scalar(stmt)
     if wanted_villagers:
+        user_id = get_jwt_identity()
+        # if the user is the owner of the island
+        if str(wanted_villagers.island.user_id) != user_id:
+            return {"error": "You are not the owner of this island's wanted villager list."}, 403
+
+    if wanted_villagers:
         db.session.delete(wanted_villagers)
         db.session.commit()
-        return {"message": f"Villager '{wanted_villagers.villager_id}' deleted successfully from your Wanted List"}
+        return {"message": f"Villager '{wanted_villagers.villager_id}' deleted successfully from your Wanted List"}, 200
     else:
         return {"error": f"Villager with id {wanted_villagers_id} not found"}, 404
-    # return {"message": "Villager deleted from Wanted list"}, 200

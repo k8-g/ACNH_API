@@ -75,6 +75,6 @@ def delete_island_villager(island_villager_id):
     if island_villager:
         db.session.delete(island_villager)
         db.session.commit()
-        return {"message": f"Villager '{island_villager.villager_id}' deleted successfully from your Island List"}
+        return {"message": f"Villager '{island_villager.villager_id}' deleted successfully from your Island List"}, 200
     else:
         return {"error": f"Villager with id {island_villager_id} not found"}, 404

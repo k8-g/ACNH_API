@@ -68,6 +68,10 @@ def delete_island(island_id):
     island = db.session.scalar(stmt)
     # if island exists
     if island:
+        user_id = get_jwt_identity()
+        # if the user is the owner of the island
+        if str(island.user_id) != user_id:
+            return {"error": "You are not the owner of this island."}, 403
         # delete the island
         db.session.delete(island)
         db.session.commit()
@@ -88,6 +92,10 @@ def update_island(island_id):
     island = db.session.scalar(stmt)
     # if island exists
     if island:
+        user_id = get_jwt_identity()
+        # if the user is the owner of the island
+        if str(island.user_id) != user_id:
+            return {"error": "You are not the owner of this island."}, 403
         # update the fields required
         island.island_name = body_data.get("island_name") or island.island_name
         # commit to the db
