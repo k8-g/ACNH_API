@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-
-from init import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from init import db
+from utils import authorise_as_admin
 from models.villager import Villager
 from schemas.villager import villager_schema, villagers_schema
 
@@ -75,12 +75,16 @@ def create_villager():
 @villager_bp.route("/<int:villager_id>", methods=["DELETE"])
 @jwt_required()
 def delete_villager(villager_id):
+    # check if user is admin or not
+    is_admin = authorise_as_admin()
+    if not is_admin:
+        return{"Error": "User is not authorised to perform this action."}, 403
     stmt = db.select(Villager).filter_by(id=villager_id)
     villager = db.session.scalar(stmt)
     if villager:
         db.session.delete(villager)
         db.session.commit()
-        return {"message": f"Villager '{villager.name}' deleted successfully"}
+        return {"message": f"Villager '{villager.name}, ID No. {villager_id}' deleted successfully"}
     else:
         return {"error": f"Villager with id {villager_id} not found"}, 404
 
@@ -115,4 +119,14 @@ def update_villager(villager_id):
         return villager_schema.dump(villager)
     else:
         return {"error": f"Villager with id {villager_id} not found"}, 404
+
+# # Authorise so only admin can delete villager data from the db
+# def authorise_as_admin():
+#     # get the user's id from jwt identity
+#     user_id = get_jwt_identity()
+#     # fetch the user from the db
+#     stmt = db.select(User).filter_by(id=user_id)
+#     user = db.session.scalar(stmt)
+#     # check whether the user is an admin or not
+#     return user.is_admin
 
