@@ -54,6 +54,10 @@ def delete_note(wanted_villagers_id, note_id):
     note = db.session.scalar(stmt)
     # if note exists
     if note:
+        user_id = get_jwt_identity()
+        # if the user is the owner of the note
+        if str(note.wanted_villager.island.user_id) != user_id:
+            return {"error": "You are not the author of this note"}, 403
         # delete the note
         db.session.delete(note)
         db.session.commit()
@@ -76,6 +80,10 @@ def edit_note(wanted_villagers_id, note_id):
     note = db.session.scalar(stmt)
     # if note exists
     if note:
+        user_id = get_jwt_identity()
+        # if the user is the owner of the note
+        if str(note.wanted_villager.island.user_id) != user_id:
+            return {"error": "You are not the author of this note"}, 403
         # update the fields
         note.notes = body_data.get("notes") or note.notes
         # commit

@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from init import db
 from models.island_villager import IslandVillager
 from schemas.island_villagers import island_villager_schema, island_villagers_schema
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Create a blueprint
 island_villagers_bp = Blueprint('island_villagers', __name__, url_prefix="/island_villagers")
@@ -42,6 +42,12 @@ def add_island_villager():
 def update_island_villager(island_villager_id):
     body_data = request.get_json()
     island_villager = IslandVillager.query.filter_by(id=island_villager_id).first()
+    
+    if island_villager:
+        user_id = get_jwt_identity()
+        # if the user is the owner of the villager list
+        if str(island_villager.island.user_id) != user_id:
+            return {"error": "You are not the owner of this island's villager list"}, 403
 
     island_villager = IslandVillager(
         island_id=body_data.get("island_id"),
@@ -51,7 +57,6 @@ def update_island_villager(island_villager_id):
     if island_villager:
         island_villager.text = body_data.get("text") or island_villager.text
 
-    # island_villager = IslandVillager.query.get_or_404(id)
     db.session.commit()
     return island_villager_schema.dump(island_villager), 200
 
@@ -60,6 +65,13 @@ def update_island_villager(island_villager_id):
 def delete_island_villager(island_villager_id):
     stmt = db.select(IslandVillager).filter_by(id=island_villager_id)
     island_villager = db.session.scalar(stmt)
+    
+    if island_villager:
+        user_id = get_jwt_identity()
+        # if the user is the owner of the villager list
+        if str(island_villager.island.user_id) != user_id:
+            return {"error": "You are not the owner of this island's villager list"}, 403
+        
     if island_villager:
         db.session.delete(island_villager)
         db.session.commit()
