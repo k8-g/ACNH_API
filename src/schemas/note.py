@@ -5,7 +5,7 @@ class NoteSchema(ma.Schema):
     wanted_villager = fields.Nested('WantedVillagerSchema', exclude=["notes"])
 
     class Meta:
-        fields = ("id", "wanted_villager", "notes")
+        fields = ("wanted_villager", "notes", "id")
         ordered = True
 
 
