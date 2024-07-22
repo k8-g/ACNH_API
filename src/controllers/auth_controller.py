@@ -7,31 +7,11 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 from init import db, bcrypt, jwt
 from models.user import User, user_schema, UserSchema
-# from models.island import Island
-# from schemas.island import island_schema, IslandSchema
 
 
 # Added url_prefix /auth
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
-
-# @auth_bp.route('/register', methods=['POST'])
-# def register_user():
-#     try:
-#         # get the data from the body of the request
-#         body_data = IslandSchema().load(request.get_json())
-
-#         # create an instance of the Island model
-#         user = Island(
-#             name_of_island=body_data.get("name_of_island"),
-#             owner_of_island=body_data.get("owner_of_island")
-#             )
-#         # extract the password from the body
-#         password = body_data.get("password")
-
-#         # hash the password
-#         if password:
-#             user.password = bcrypt.generate_password_hash(password).decode("utf-8")
 
 @auth_bp.route('/register', methods=['POST'])
 def register_user():
@@ -51,22 +31,6 @@ def register_user():
         if password:
             user.password = bcrypt.generate_password_hash(password).decode("utf-8")
 
-
-        # data = request.get_json()
-        # owner_of_island = data.get('owner_of_island')
-        # password = data.get('password')
-        # name_of_island = data.get('name_of_island')
-        # is_admin = data.get('is_admin', False)
-
-        # if Island.query.filter_by(owner_of_island=owner_of_island).first():
-        #     return {"message": "User already exists"}, 400
-
-        # user = Island(
-        #     name_of_island=name_of_island,
-        #     owner_of_island=owner_of_island,
-        #     password=bcrypt.generate_password_hash(password).decode('utf-8'),
-        #     is_admin=is_admin
-        # )
         db.session.add(user)
         db.session.commit()
 
@@ -119,3 +83,24 @@ def update_user():
         return user_schema.dump(user)
     else:
         return {"error": "User does not exist"}
+    
+
+# # /auth/users/user_id - DELETE
+# @auth_bp.route("/users/<int:user_id>", methods=["DELETE"])
+# @jwt_required()
+# @auth_as_admin_decorator
+# def delete_user(user_id):
+#     # find the user with the id from DB
+#     stmt = db.select(User).filter_by(id=user_id)
+#     user = db.session.scalar(stmt)
+#     # if user exists
+#     if user:
+#         # delete the user
+#         db.session.delete(user)
+#         db.session.commit()
+#         # return a message
+#         return {"message": f"User with id {user_id} deleted"}
+#     # else
+#     else:
+#         # return error saying user does not exist
+#         return {"error": f"User with id {user_id} not found"}, 404
