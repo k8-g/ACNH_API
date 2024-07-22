@@ -3,7 +3,7 @@ from datetime import timedelta
 from flask import Blueprint, request
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from init import db, bcrypt, jwt
 from models.user import User, user_schema, UserSchema
@@ -37,7 +37,7 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 def register_user():
     try:
         # get the data from the body of the request
-        body_data = request.get_json()
+        body_data = UserSchema().load(request.get_json())
 
         # create an instance of the Island model
         user = User(
@@ -71,6 +71,7 @@ def register_user():
         db.session.commit()
 
         return user_schema.dump(user), 201
+    
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return {"error": f"Missing information; {err.orig.diag.column_name} is required"}, 409
@@ -100,3 +101,21 @@ def login_user():
     else:
         # respond back with an error message
         return {"error": "Incorrect email or password."}, 401
+    
+# /auth/users/user_id
+@auth_bp.route("/users", methods= ['PUT', 'PATCH'])
+@jwt_required()
+def update_user():
+    body_data = UserSchema().load(request.get_json(), partial=True)
+    password = body_data.get("password")
+    stmt = db.select(User).filter_by(id=get_jwt_identity())
+    user = db.session.scalar(stmt)
+    if user:
+        user.name = body_data.get("name") or user.name
+        user.email = body_data.get("email") or user.email
+        if password:
+            user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+        db.session.commit()
+        return user_schema.dump(user)
+    else:
+        return {"error": "User does not exist"}

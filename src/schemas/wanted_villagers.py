@@ -4,13 +4,14 @@ from marshmallow import fields
 class WantedVillagerSchema(ma.Schema):
     
     island = fields.Nested('IslandSchema', only=["id", "island_name"])
-    villager = fields.Nested('VillagerSchema', only=["id", "name"])
+    villager = fields.Nested('VillagerSchema')
     # notes = fields.Nested('NoteSchema', exclude=["wanted_vilager"])
     notes = fields.Nested('NoteSchema', many=True, exclude=["wanted_villager"])
 
     class Meta:
-        fields = ("id", "island", "villager", "notes")
+        fields = ("island", "villager", "id", "notes")
         # fields = ("id", "island", "villager", "notes")
+        ordered = True
 
 
 wanted_villager_schema = WantedVillagerSchema()

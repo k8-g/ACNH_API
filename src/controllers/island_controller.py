@@ -44,7 +44,7 @@ def get_one_island(island_id):
 @jwt_required()
 def create_island():
     #get the data from the body of the request
-    body_data = request.get_json()
+    body_data = island_schema.load(request.get_json())
     #create a new Island model instance
     # if not body_data.get("owner_of_island") or not body_data.get("island_name"):
     #     return {"error": "owner_of_island and island_name are required"}, 400
@@ -82,7 +82,7 @@ def delete_island(island_id):
 @jwt_required()
 def update_island(island_id):
     # get the data from the body of the request
-    body_data = request.get_json()
+    body_data = island_schema.load(request.get_json(), partial=True)
     # get the island from the db
     stmt = db.select(Island).filter_by(id=island_id)
     island = db.session.scalar(stmt)

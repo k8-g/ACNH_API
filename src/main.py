@@ -2,11 +2,14 @@
 import os
 
 from flask import Flask
+from marshmallow.exceptions import ValidationError
 
 from init import db, ma, bcrypt, jwt
 
 def create_app():
     app = Flask(__name__)
+
+    app.json.sort_keys = False
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 
@@ -16,6 +19,11 @@ def create_app():
     ma.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+
+    @app.errorhandler(ValidationError)
+    def validation_error(err):
+        return {"error": err.messages}, 400
+
 
      # Import and register blueprints
     from controllers.cli_controller import db_commands
