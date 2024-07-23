@@ -41,6 +41,7 @@ def create_villager():
     #     return {"error": "island_id is required"}, 400
     
     villager = Villager(
+        # id=body_data.get("id")
         name=body_data.get("name"),
         species=body_data.get("species"),
         gender=body_data.get("gender"),
