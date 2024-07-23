@@ -1,3 +1,7 @@
+# import pandas as pd
+import csv
+import os
+
 from flask import Blueprint
 
 from init import db, bcrypt
@@ -24,6 +28,12 @@ def drop_tables():
 def seed_tables():
     # Example seed data
     users = [
+            User(
+            name="Admin",
+            email="admin@email.com",
+            password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+            is_admin=True
+        ),
     User(
         #user 0
         name="Kate",
@@ -56,18 +66,18 @@ def seed_tables():
         ),
     ]
 
-    villagers = [
-        Villager(
-            # villager_id=430,
-            name="Judy",
-            gender="Female",
-            species="Bear cub",
-            personality="Snooty",
-            birthday="March 10",
-            catchphrase="myohmy",
-            hobbies="music"
-        )
-    ]
+    # villagers = [
+    #     Villager(
+    #         # villager_id=430,
+    #         name="Judy",
+    #         gender="Female",
+    #         species="Bear cub",
+    #         personality="Snooty",
+    #         birthday="March 10",
+    #         catchphrase="myohmy",
+    #         hobbies="music"
+    #     )
+    # ]
 
     # wanted_villagers = [
     # WantedVillagers(
@@ -88,8 +98,61 @@ def seed_tables():
     # Add islands to the database session
     db.session.add_all(users)
     db.session.add_all(islands)
-    db.session.add_all(villagers)
+    # db.session.add_all(villagers)
     # db.session.add_all(wanted_villagers)
     # db.session.add_all(notes)
     db.session.commit()
+
+
+
+    # # Read villager data from CSV file
+    # df = pd.read_csv('')
+    # villagers = []
+    # for index, row in df.iterrows():
+    #     villager = Villager(
+    #         id=row['id'],
+    #         name=row['name'],
+    #         gender=row['gender'],
+    #         species=row['species'],
+    #         personality=row['personality'],
+    #         birthday=row['birthday'],
+    #         catchphrase=row['catchphrase'],
+    #         hobbies=row['hobbies']
+    #     )
+    #     villagers.append(villager)
+
+
+    # Define the path to the CSV file
+    csv_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'acnh_villager_data.csv')
+
+    # Check if the file exists
+    if not os.path.exists(csv_path):
+        print(f"Error: CSV file not found at path: {csv_path}")
+        return
+
+    # Read villager data from CSV file
+    with open(csv_path, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        villagers = []
+        for row in reader:
+            villager = Villager(
+                id=int(row['id']),
+                name=row['name'],
+                gender=row['gender'],
+                species=row['species'],
+                personality=row['personality'],
+                birthday=row['birthday'],
+                catchphrase=row['catchphrase'],
+                hobbies=row['hobbies']
+            )
+            villagers.append(villager)
+
+
+
+
+
+    db.session.bulk_save_objects(villagers)
+    db.session.commit()
+
+
     print("Tables seeded")

@@ -3,7 +3,7 @@ from init import db
 class Villager(db.Model):
     __tablename__ = "villager"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.BigInteger, primary_key=True)
     name = db.Column(db.String, nullable=False)
     gender = db.Column(db.String, nullable=False)
     species = db.Column(db.String, nullable=False)
