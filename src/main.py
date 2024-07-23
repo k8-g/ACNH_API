@@ -46,11 +46,6 @@ def create_app():
 
     # from controllers.notes_controller import notes_bp
     # app.register_blueprint(notes_bp)
-
-    # from controllers.comments_controller import comments_bp
-    # app.register_blueprint(comments_bp)
-
-
     
     
     # Import models to ensure they are registered with SQLAlchemy
@@ -58,7 +53,7 @@ def create_app():
     from models.villager import Villager
     from models.island_villager import IslandVillager
     from models.wanted_villagers import WantedVillagers
-    # from models.comment import Comment
+
     # from models.note import Note
 
     # Import schemas to ensure they are registered with Marshmallow
@@ -66,7 +61,7 @@ def create_app():
     from schemas.villager import VillagerSchema, villager_schema, villagers_schema
     from schemas.island_villagers import IslandVillagerSchema, island_villager_schema, island_villagers_schema
     from schemas.wanted_villagers import WantedVillagerSchema, wanted_villager_schema, wanted_villagers_schema
-    # from schemas.comment import CommentSchema, comment_schema, comments_schema
+
     # from schemas.notes import NoteSchema, note_schema, notes_schema
 
     return app
