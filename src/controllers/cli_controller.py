@@ -1,4 +1,3 @@
-# import pandas as pd
 import csv
 import os
 
@@ -9,6 +8,7 @@ from init import db, bcrypt
 from models.user import User
 from models.island import Island
 from models.villager import Villager
+from models.island_villager import IslandVillager
 from models.wanted_villagers import WantedVillagers
 from models.note import Note
 
@@ -26,27 +26,27 @@ def drop_tables():
 
 @db_commands.cli.command("seed")
 def seed_tables():
-    # Example seed data
+    # Seed data
     users = [
-            User(
-            name="Admin",
-            email="admin@email.com",
-            password=bcrypt.generate_password_hash("123456").decode("utf-8"),
-            is_admin=True
-        ),
-    User(
-        #user 0
-        name="Kate",
-        email="kate@email.com",
+        # user 0
+        User(
+        name="Admin",
+        email="admin@email.com",
         password=bcrypt.generate_password_hash("123456").decode("utf-8"),
         is_admin=True
-    ),
-    User(
-        # user 1
-        name="Isaboo",
-        email="isabelle@puppy.com",
-        password=bcrypt.generate_password_hash("123456").decode("utf-8"),
-    )
+        ),
+        #user 1
+        User(
+            name="Kate",
+            email="kate@email.com",
+            password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+        ),
+        # user 2
+        User(
+            name="Isaboo",
+            email="isabelle@puppy.com",
+            password=bcrypt.generate_password_hash("123456").decode("utf-8"),
+        )
     ]
     db.session.add_all(users)
     db.session.commit()
@@ -54,72 +54,24 @@ def seed_tables():
     # Refresh the session to get the IDs
     db.session.refresh(users[0])
     db.session.refresh(users[1])
+    db.session.refresh(users[2])
 
+    
     islands = [
         Island(
             island_name="Zorlandia",
-            user_id=users[0].id
+            user_id=users[1].id
         ),
         Island(
             island_name="PuppyLand",
-            user_id=users[1].id
+            user_id=users[2].id
         ),
     ]
 
-    # villagers = [
-    #     Villager(
-    #         # villager_id=430,
-    #         name="Judy",
-    #         gender="Female",
-    #         species="Bear cub",
-    #         personality="Snooty",
-    #         birthday="March 10",
-    #         catchphrase="myohmy",
-    #         hobbies="music"
-    #     )
-    # ]
-
-    # wanted_villagers = [
-    # WantedVillagers(
-    #     island_id=islands[0].id,
-    #     villager_id=villagers[0].id
-    # )
-    # ]
-
-    # notes = [
-    #     Note(
-            
-    #         wanted_villagers_id=wanted_villagers[0].id,
-    #         notes="She is pretty"
-    #     )
-    # ]
-    # ALWAYS PUT COMMA AFTER EACH LINE ^
-
-    # Add islands to the database session
+    # Add users & islands to the database session
     db.session.add_all(users)
     db.session.add_all(islands)
-    # db.session.add_all(villagers)
-    # db.session.add_all(wanted_villagers)
-    # db.session.add_all(notes)
     db.session.commit()
-
-
-
-    # # Read villager data from CSV file
-    # df = pd.read_csv('')
-    # villagers = []
-    # for index, row in df.iterrows():
-    #     villager = Villager(
-    #         id=row['id'],
-    #         name=row['name'],
-    #         gender=row['gender'],
-    #         species=row['species'],
-    #         personality=row['personality'],
-    #         birthday=row['birthday'],
-    #         catchphrase=row['catchphrase'],
-    #         hobbies=row['hobbies']
-    #     )
-    #     villagers.append(villager)
 
 
     # Define the path to the CSV file
@@ -147,12 +99,70 @@ def seed_tables():
             )
             villagers.append(villager)
 
-
-
-
-
     db.session.bulk_save_objects(villagers)
     db.session.commit()
 
+    island_villagers = [
+        IslandVillager(
+	        island_id=1,
+	        villager_id=430
+        ),
+        IslandVillager(
+	        island_id=1,
+	        villager_id=285
+        ),
+        IslandVillager(
+	        island_id=1,
+	        villager_id=77
+        ),
+        IslandVillager(
+	        island_id=1,
+	        villager_id=87
+        ),        
+        IslandVillager(
+	        island_id=1,
+	        villager_id=165
+        ),
+        IslandVillager(
+	        island_id=1,
+	        villager_id=328
+        ),
+        IslandVillager(
+	        island_id=1,
+	        villager_id=57
+        )
+    ]
+
+   
+
+    db.session.add_all(island_villagers)
+    db.session.commit()
+
+    wanted_villagers = [
+    WantedVillagers(
+        villager_id=Villager.query.filter_by(name="Gloria").first().id,
+        island_id=1  # Assuming you have the island_id, you can adjust as needed
+    ),
+    WantedVillagers(
+        villager_id=Villager.query.filter_by(name="Gwen").first().id,
+        island_id=1
+    )
+]
+
+    db.session.add_all(wanted_villagers)
+    db.session.commit()
+
+    notes = [
+        Note(
+            wanted_villagers_id=1,
+            notes="She has purple hair & pretty makeup."
+        ),
+        Note(
+        wanted_villagers_id=3,
+        notes="She has purple hair & pretty makeup too."
+        )
+    ]
+    db.session.add_all(notes)
+    db.session.commit()
 
     print("Tables seeded")

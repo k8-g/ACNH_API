@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from init import db
+from models.villager import Villager
 from models.wanted_villagers import WantedVillagers
 from schemas.wanted_villagers import wanted_villager_schema, wanted_villagers_schema
 from controllers.notes_controller import notes_bp
@@ -31,10 +32,23 @@ def get_wanted_villager(wanted_villagers_id):
 @jwt_required()
 def add_wanted_villager():
     body_data = request.get_json()
+    # add_wanted_villager = WantedVillagers(
+    #     island_id=body_data.get('island_id'), 
+    #     villager_id=body_data.get('villager_id'),  
+    # )
+
+    # Look up the villager's ID based on the name provided in the request body
+    villager_name = body_data.get('villager_name')
+    villager = Villager.query.filter_by(name=villager_name).first()
+
+    if not villager:
+        return {"error": f"Villager with name {villager_name} not found"}, 404
+
     add_wanted_villager = WantedVillagers(
         island_id=body_data.get('island_id'), 
-        villager_id=body_data.get('villager_id'),  
+        villager_id=villager.id  # Use the retrieved villager ID
     )
+
     db.session.add(add_wanted_villager)
     db.session.commit()
     return wanted_villager_schema.dump(add_wanted_villager), 201
