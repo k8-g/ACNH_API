@@ -14,19 +14,23 @@ from models.note import Note
 
 db_commands = Blueprint("db", __name__)
 
+# Creating a command function for creating tables
 @db_commands.cli.command("create")
 def create_tables():
     db.create_all()
     print("Tables created")
 
+# Creating a command function for dropping tables
 @db_commands.cli.command("drop")
 def drop_tables():
     db.drop_all()
     print("Tables dropped")
 
+# Creating a command function for seeding tables
 @db_commands.cli.command("seed")
 def seed_tables():
     # Seed data
+    # Example admin and users
     users = [
         # user 0
         User(
@@ -56,7 +60,7 @@ def seed_tables():
     db.session.refresh(users[1])
     db.session.refresh(users[2])
 
-    
+    # Example islands belonging to created users above
     islands = [
         Island(
             island_name="Zorlandia",
@@ -98,10 +102,11 @@ def seed_tables():
                 hobbies=row['hobbies']
             )
             villagers.append(villager)
-
+    # Add villager data to the database session
     db.session.bulk_save_objects(villagers)
     db.session.commit()
 
+    # Example IslandVillagers belonging to Island Zorlandia of user Kate
     island_villagers = [
         IslandVillager(
 	        island_id=1,
@@ -138,10 +143,11 @@ def seed_tables():
     db.session.add_all(island_villagers)
     db.session.commit()
 
+    # Exampled WantedVillagers for Zorlandia for user Kate
     wanted_villagers = [
     WantedVillagers(
         villager_id=Villager.query.filter_by(name="Gloria").first().id,
-        island_id=1  # Assuming you have the island_id, you can adjust as needed
+        island_id=1
     ),
     WantedVillagers(
         villager_id=Villager.query.filter_by(name="Gwen").first().id,
@@ -152,6 +158,7 @@ def seed_tables():
     db.session.add_all(wanted_villagers)
     db.session.commit()
 
+    # Example notes for WantedVillagers for Zorlandia
     notes = [
         Note(
             wanted_villagers_id=1,

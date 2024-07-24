@@ -8,18 +8,20 @@ class User(db.Model):
     __tablename__ = "users"
 
     # attributes of the table
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True) # Primary key
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
 
+
+# User Schema
 class UserSchema(ma.Schema):
     islands = fields.List(fields.Nested('IslandSchema', exclude=["user"]))
-
+    # email field requirements
     email = fields.String(required=True, validate=Regexp("^\S+@\S+\.\S+$", error="Invalid Email Format"))
-
+    # password field requirements
     password = fields.String(required=True, validate=Regexp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$", error="Minimum six characters, at least one letter and one number"))
 
     class Meta:

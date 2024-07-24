@@ -1,8 +1,10 @@
 from init import db
 
 class Villager(db.Model):
+    # name of table
     __tablename__ = "villager"
 
+    # arributes of the table
     id = db.Column(db.BigInteger, primary_key=True)
     name = db.Column(db.String, nullable=False)
     gender = db.Column(db.String, nullable=False)
@@ -12,18 +14,5 @@ class Villager(db.Model):
     catchphrase = db.Column(db.String, nullable=False)
     hobbies = db.Column(db.String, nullable=False)
 
-    # # Relationships
-    # island_villagers = db.relationship('IslandVillager', back_populates='villager')
-    # wanted_villagers = db.relationship('WantedVillager', back_populates='villager')
-
-    # foreign keys
-    # user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    # island_id = db.Column(db.Integer, db.ForeignKey('island.island_id'), nullable=False)
-
-    # field that has info about the user
-    # user = db.relationship('User', back_populates='villagers')
-    # islands = db.relationship("Island", back_populates="villagers")
-    # comments = db.relationship('Comment', back_populates='villager')
-
-    # notes = db.relationship('Note', back_populates="villagers")
-    
+# Villager is pre-set data, read-only for normal users
+# Only an admin can Create, Update or Delete a villager's data

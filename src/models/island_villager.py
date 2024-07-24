@@ -1,8 +1,11 @@
 from init import db
 
+# Model name/Class name
 class IslandVillager(db.Model):
+    # name of the table
     __tablename__ = "island_villager"
 
+    # Attributes of the table
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String, nullable=True)
 
@@ -10,19 +13,12 @@ class IslandVillager(db.Model):
     island_id = db.Column(db.Integer, db.ForeignKey("island.id"), nullable=False)
     villager_id = db.Column(db.Integer, db.ForeignKey("villager.id"), nullable=False)
     
+    # Relationships
+    # IslandVillagers links back to Island table
     island = db.relationship('Island')
+    # IslandVillagers links back to Villager table
     villager = db.relationship('Villager')
 
-    # island = db.relationship('Island', back_populates='island_villagers')
-    # villager = db.relationship('Villager', back_populates='island_villagers')
-
-    # Relationship to other tables
-    # island = db.relationship('Island')
-    # villager = db.relationship('Villager')
-
-    # user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    # comment_id = db.Column(db.Integer, db.ForeignKey("comments.id"), nullable=False)
-
-    # user = db.relationship('User', back_populates='island_villagers')
-    # villagers = db.relationship('Villager', back_populates='island_villager')
-    # comments = db.relationship('Comment', back_populates='island_villager')
+    # Each Island can have multiple IslandVillagers
+    # IslandVillagers accesses Villager data
+    
