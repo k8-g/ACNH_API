@@ -33,9 +33,11 @@ def get_one_island(island_id):
     # first id is the db id, second is the id above
     stmt = db.select(Island).filter_by(id=island_id)
     island = db.session.scalar(stmt)
+    # if island exists
     if island:
         return island_schema.dump(island)
     else:
+        # return error message
         return {"error": f"Island with id {island_id} not found"}, 404
 
 
@@ -46,9 +48,6 @@ def create_island():
     #get the data from the body of the request
     body_data = island_schema.load(request.get_json())
     #create a new Island model instance
-    # if not body_data.get("owner_of_island") or not body_data.get("island_name"):
-    #     return {"error": "owner_of_island and island_name are required"}, 400
-
     island = Island(
         island_name=body_data.get("island_name"),
         user_id=get_jwt_identity()
@@ -69,12 +68,14 @@ def delete_island(island_id):
     # if island exists
     if island:
         user_id = get_jwt_identity()
-        # if the user is the owner of the island
+        # check if the user is the owner of the island
         if str(island.user_id) != user_id:
+            # if not correct user, return message
             return {"error": "You are not the owner of this island."}, 403
         # delete the island
         db.session.delete(island)
         db.session.commit()
+        # respond
         return {"message": f"Island '{island.island_name}' deleted successfully"}
     #else
     else:
@@ -93,8 +94,9 @@ def update_island(island_id):
     # if island exists
     if island:
         user_id = get_jwt_identity()
-        # if the user is the owner of the island
+        # check if the user is the owner of the island
         if str(island.user_id) != user_id:
+            # if not correct user, return message
             return {"error": "You are not the owner of this island."}, 403
         # update the fields required
         island.island_name = body_data.get("island_name") or island.island_name

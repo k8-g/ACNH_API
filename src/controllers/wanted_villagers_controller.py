@@ -9,25 +9,36 @@ from controllers.notes_controller import notes_bp
 
 # Create a blueprint
 wanted_villagers_bp = Blueprint('wanted_villagers', __name__, url_prefix="/wanted_villagers")
-# wanted_villagers_bp.register_blueprint(notes_bp)
+# Register the notes blueprint with wanted_villagers blueprint
 wanted_villagers_bp.register_blueprint(notes_bp)
 
+
+# /wanted_villagers - GET - fetch all wanted villagers
 @wanted_villagers_bp.route('/', methods=['GET'])
 def get_wanted_villagers():
+    # Select all wanted villagers and order them by their id in ascending order
     stmt = db.select(WantedVillagers).order_by(WantedVillagers.id.asc())
     stmt = db.select(WantedVillagers)
     wanted_villagers = db.session.scalars(stmt)
+    # Return the list of wanted villagers
     return wanted_villagers_schema.dump(wanted_villagers)
 
+# /wanted_villagers/<id> - GET - fetch a single wanted villager
 @wanted_villagers_bp.route('/<int:wanted_villagers_id>', methods=['GET'])
 def get_wanted_villager(wanted_villagers_id):
+    # Select a wanted villager by id
     stmt = db.select(WantedVillagers).filter_by(id=wanted_villagers_id)
     wanted_villagers = db.session.scalar(stmt)
+    # If wanted villager exists
     if wanted_villagers:
+        # return the wanted villager data
         return wanted_villager_schema.dump(wanted_villagers)
+    # else
     else:
+        # Return an error if wanted villager is not found
         return {"error": f"Villager with id {wanted_villagers_id} not found"}, 404 
 
+# /wanted_villagers - POST - create a new wanted villager
 @wanted_villagers_bp.route('/', methods=['POST'])
 @jwt_required()
 def add_wanted_villager():
@@ -40,23 +51,29 @@ def add_wanted_villager():
     # Look up the villager's ID based on the name provided in the request body
     villager_name = body_data.get('villager_name')
     villager = Villager.query.filter_by(name=villager_name).first()
-
+    # If villager does not exist
     if not villager:
+        # return an error
         return {"error": f"Villager with name {villager_name} not found"}, 404
-
+    
+    # Create a new wanted villager instance
     add_wanted_villager = WantedVillagers(
         island_id=body_data.get('island_id'), 
         villager_id=villager.id  # Use the retrieved villager ID
     )
-
+    # Add and commit the wanted villager to the database
     db.session.add(add_wanted_villager)
     db.session.commit()
+    # Return the created wanted villager
     return wanted_villager_schema.dump(add_wanted_villager), 201
 
+# /wanted_villagers/<id> - PUT, PATCH - update a wanted villager (not allowed)
 @wanted_villagers_bp.route('/<int:wanted_villagers_id>', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_wanted_villager(wanted_villagers_id):
+    # Return an error message since updating wanted villager entries is not allowed
     return {"error": "Updating wanted villager entries is not allowed, as this section is ID's only. You may update notes for your wanted villagers instead."}, 405
+
     # body_data = request.get_json()
     # wanted_villagers = WantedVillagers.query.filter_by(id=wanted_villagers_id).first()
     # # , partial=True 
@@ -75,6 +92,7 @@ def update_wanted_villager(wanted_villagers_id):
     # db.session.commit()
     # return wanted_villager_schema.dump(wanted_villager), 200
 
+# /wanted_villagers/<id> - DELETE - delete a wanted villager
 @wanted_villagers_bp.route('/<int:wanted_villagers_id>', methods=['DELETE'])
 @jwt_required()
 def delete_wanted_villager(wanted_villagers_id):
@@ -92,12 +110,15 @@ def delete_wanted_villager(wanted_villagers_id):
     #     return {"message": f"Villager '{wanted_villagers.villager_id}' deleted successfully from your Wanted List"}, 200
     # else:
     #     return {"error": f"Villager with id {wanted_villagers_id} not found"}, 404
+
+    # Get the data from the body of the request
     body_data = request.get_json()
     wanted_villagers_id = body_data.get('wanted_villagers_id')
     villager_name = body_data.get('villager_name')
 
     # if neither wanted villager's id or villager's name has been provided:
     if not wanted_villagers_id and not villager_name:
+        # return error message
         return {"error": "Either 'wanted_villagers_id' or 'villager_name' is required to delete a wanted villager."}, 400
 
     # If wanted villager's id was provided:
@@ -108,20 +129,28 @@ def delete_wanted_villager(wanted_villagers_id):
     elif villager_name:
         # Search for villager's name to obtain villager id
         villager = Villager.query.filter_by(name=villager_name).first()
+        # if villager name does not exist
         if not villager:
+            # return error message
             return {"error": f"Villager with name {villager_name} not found"}, 404
+        
         wanted_villagers = WantedVillagers.query.filter_by(villager_id=villager.id).first()
     
+    # If wanted villager entry is not found, return an error
     if not wanted_villagers:
+        # return error message
         return {"error": "Wanted villager entry not found"}, 404
-
+    # Get user id from JWT token
     user_id = get_jwt_identity()
-
+    # If the user is not the owner of the island, 
     if str(wanted_villagers.island.user_id) != user_id:
+        # return an error
         return {"error": "You are not the owner of this island's wanted villager list."}, 403
-
+    # Delete the wanted villager
     db.session.delete(wanted_villagers)
+    # Commit to databae
     db.session.commit()
+    # return a success message
     return {"message": f"'{wanted_villagers.villager.name}' deleted successfully from your Wanted List"}, 200
 
 

@@ -9,7 +9,6 @@ from init import db, bcrypt, jwt
 from models.user import User, user_schema, UserSchema
 
 
-# Added url_prefix /auth
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
@@ -31,9 +30,11 @@ def register_user():
         if password:
             user.password = bcrypt.generate_password_hash(password).decode("utf-8")
 
+        # add and commit to the DB
         db.session.add(user)
         db.session.commit()
-
+        
+        # respond back
         return user_schema.dump(user), 201
     
     except IntegrityError as err:
@@ -47,41 +48,44 @@ def register_user():
 def login_user():
     # get the data from the body of the request
     body_data = request.get_json()
-    # owner_of_island = data.get('owner_of_island')
-    # password = data.get('password')
-
-    # find the user/island in DB with that owner name
+    # find the user in the database with that email
     stmt = db.select(User).filter_by(email=body_data.get("email"))
     user = db.session.scalar(stmt)
-
-    # user = User.query.filter_by(name=name).first()
     # if user exists and password matches
-    # if user and bcrypt.check_password_hash(user.password, password):
     if user and bcrypt.check_password_hash(user.password, body_data.get("password")):
         # create jwt
-        # token = create_access_token(identity=str({'user_id': user.id, 'name': user.name}), expires_delta=timedelta(days=1))
         token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
         return {"name": user.name, "email": user.email, "id": user.id, "is_admin": user.is_admin, "token": token}, 200
+    # else
     else:
         # respond back with an error message
         return {"error": "Incorrect email or password."}, 401
     
-# /auth/users/user_id
+# /auth/users
 @auth_bp.route("/users", methods= ['PUT', 'PATCH'])
 @jwt_required()
 def update_user():
+    # get the fields from body of the request
     body_data = UserSchema().load(request.get_json(), partial=True)
     password = body_data.get("password")
+    # fetch the user from the db
     stmt = db.select(User).filter_by(id=get_jwt_identity())
     user = db.session.scalar(stmt)
+    # if user exists
     if user:
+        # update the fields
         user.name = body_data.get("name") or user.name
         user.email = body_data.get("email") or user.email
+        # user.password = <hashed-password> or user.password
         if password:
             user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+        # commit to the DB
         db.session.commit()
+        # return a response
         return user_schema.dump(user)
+    
     else:
+        # return an error
         return {"error": "User does not exist"}
     
 

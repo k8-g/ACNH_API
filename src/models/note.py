@@ -2,26 +2,18 @@ from init import db
 
 
 class Note(db.Model):
+    # name of table
     __tablename__ = "notes"
 
+    # Attributes of table
     id = db.Column(db.Integer, primary_key=True)
     notes = db.Column(db.String, nullable=True)
-
+    # Foreign keys
     wanted_villagers_id = db.Column(db.Integer, db.ForeignKey('wanted_villagers.id'), nullable=False)
 
 
     # Relationship
-    # wanted_villagers = db.relationship('WantedVillagers')
-
+    # Notes links back to WantedVillagers
     wanted_villager = db.relationship('WantedVillagers', back_populates='notes')
 
-
-
-    # user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    # island_id = db.Column(db.Integer, db.ForeignKey('island.id'), nullable=False)
-    # villager_id = db.Column(db.Integer, db.ForeignKey('villager.id'), nullable=False)
-
-
-    # user = db.relationship('User', back_populates='notes')
-    # islands = db.relationship("Island", back_populates="notes")
-    # villager = db.relationship('Villager', back_populates='notes')
+    # Each WantedVillager can have one or more Notes

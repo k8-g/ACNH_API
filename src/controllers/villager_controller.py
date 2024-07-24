@@ -13,33 +13,42 @@ villager_bp = Blueprint('villager', __name__, url_prefix="/villagers")
 # /villagers - GET - fetch all villagers - R
 @villager_bp.route("/", methods=["GET"])
 def get_all_villagers():
+    # Select all villagers and order them by their id in ascending order
     stmt = db.select(Villager).order_by(Villager.id.asc())
     stmt = db.select(Villager)
     villagers = db.session.scalars(stmt)
+    # Return the list of villagers
     return villagers_schema.dump(villagers)
 
 # /villagers/<id> - GET - fetch a single villager - R
 @villager_bp.route("/<int:villager_id>", methods=["GET"])
 def get_villager(villager_id):
-    # first id is the db id, second is the id above
+    # Select a villager by id
     stmt = db.select(Villager).filter_by(id=villager_id)
     villager = db.session.scalar(stmt)
+    # If villager exists
     if villager:
+        # return the villager data
         return villager_schema.dump(villager)
+    # else
     else:
+        # Return an error if villager is not found
         return {"error": f"Villager with id {villager_id} not found"}, 404 
 
-
+# /villagers - POST - create a new villager
 @villager_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_villager():
+    # Get the data from the body of the request
     body_data = request.get_json()
+    # Get user id from JWT token
     user_id=get_jwt_identity()
 
     # island_id = body_data.get('island_id')
     # if not island_id:
     #     return {"error": "island_id is required"}, 400
-    
+
+    # Create a new villager instance
     villager = Villager(
         # id=body_data.get("id")
         name=body_data.get("name"),
@@ -53,8 +62,10 @@ def create_villager():
         # user_id=user_id,
         # island_id=island_id
     )
+    # Add and commit the villager to the database
     db.session.add(villager)
     db.session.commit()
+    # Return the created villager
     return villager_schema.dump(villager)
 
 
@@ -72,24 +83,33 @@ def create_villager():
     # db.session.commit()
     # return villager_schema.dump(new_villager), 201
 
-
+# /villagers/<id> - DELETE - delete a villager
 @villager_bp.route("/<int:villager_id>", methods=["DELETE"])
 @jwt_required()
 def delete_villager(villager_id):
     # check if user is admin or not
     is_admin = authorise_as_admin()
+    # if not admin
     if not is_admin:
+        # return error message
         return{"Error": "User is not authorised to perform this action."}, 403
+    # Select a villager by id
     stmt = db.select(Villager).filter_by(id=villager_id)
     villager = db.session.scalar(stmt)
+    # If villager exists
     if villager:
+        # delete the villager
         db.session.delete(villager)
+        # commit to database
         db.session.commit()
+        # return success message
         return {"message": f"Villager '{villager.name}, ID No. {villager_id}' deleted successfully"}
+    # else
     else:
+        # return error message
         return {"error": f"Villager with id {villager_id} not found"}, 404
 
-
+# /villagers/<id> - PUT, PATCH - update a villager
 @villager_bp.route("/<int:villager_id>",  methods=["PUT","PATCH"])
 @jwt_required()
 def update_villager(villager_id):
@@ -101,9 +121,9 @@ def update_villager(villager_id):
     # # get the villager from the db
     # villager = db.session.scalar(stmt)
 
-    # WORKS
+    # Select a villager by id
     villager = Villager.query.filter_by(id=villager_id).first()
-
+    # If villager exists
     if villager:
         # update the fields required
         villager.id = body_data.get("id") or villager.id
@@ -116,9 +136,11 @@ def update_villager(villager_id):
         villager.hobbies = body_data.get("hobbies") or villager.hobbies
         # commit to the db
         db.session.commit()
-        # return a response
+        # return a response - with updated villager
         return villager_schema.dump(villager)
+    # else
     else:
+        # return error message
         return {"error": f"Villager with id {villager_id} not found"}, 404
 
 # # Authorise so only admin can delete villager data from the db
