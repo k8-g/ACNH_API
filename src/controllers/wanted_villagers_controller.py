@@ -81,7 +81,7 @@ def get_wanted_villager(wanted_villagers_id):
             # return the wanted villager data
             return wanted_villager_schema.dump(wanted_villager)
         else:
-            return {"error": "You do not have permission to view this wanted villager."}, 403
+            return {"error": "You are not the owner of this island's wanted villager list."}, 403
     # else
     else:
         # Return an error if wanted villager is not found
@@ -96,6 +96,13 @@ def add_wanted_villager():
     #     island_id=body_data.get('island_id'), 
     #     villager_id=body_data.get('villager_id'),  
     # )
+
+    # Get island_id from the body data
+    island_id = body_data.get('island_id')
+    # Check if the island exists
+    island = Island.query.filter_by(id=island_id).first()
+    if not island:
+        return {"error": f"Island with id {island_id} not found"}, 40
 
     # Look up the villager's ID based on the name provided in the request body
     villager_name = body_data.get('villager_name')
