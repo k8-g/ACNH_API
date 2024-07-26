@@ -21,7 +21,8 @@ def register_user():
         # create an instance of the Island model
         user = User(
             name=body_data.get("name"),
-            email=body_data.get("email")
+            # converts email to lowercase
+            email=body_data.get("email").lower()
             )
         # extract the password from the body
         password = body_data.get("password")
@@ -48,8 +49,10 @@ def register_user():
 def login_user():
     # get the data from the body of the request
     body_data = request.get_json()
+    email = body_data.get("email").lower()
     # find the user in the database with that email
-    stmt = db.select(User).filter_by(email=body_data.get("email"))
+    # stmt = db.select(User).filter_by(email=body_data.get("email"))
+    stmt = db.select(User).filter_by(email=email)
     user = db.session.scalar(stmt)
     # if user exists and password matches
     if user and bcrypt.check_password_hash(user.password, body_data.get("password")):

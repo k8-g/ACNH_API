@@ -159,17 +159,17 @@ def seed_tables():
     db.session.commit()
 
     # Example notes for WantedVillagers for Zorlandia
-    notes = [
-        Note(
-            wanted_villagers_id=1,
-            notes="She has purple hair & pretty makeup."
-        ),
-        Note(
-        wanted_villagers_id=3,
-        notes="She has purple hair & pretty makeup too."
-        )
-    ]
-    db.session.add_all(notes)
-    db.session.commit()
+    # notes = [
+    #     Note(
+    #         wanted_villagers_id=1,
+    #         notes="She has purple hair & pretty makeup."
+    #     ),
+    #     Note(
+    #     wanted_villagers_id=3,
+    #     notes="She has purple hair & pretty makeup too."
+    #     )
+    # ]
+    # db.session.add_all(notes)
+    # db.session.commit()
 
     print("Tables seeded")
