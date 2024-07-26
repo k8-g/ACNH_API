@@ -143,7 +143,7 @@ def seed_tables():
     db.session.add_all(island_villagers)
     db.session.commit()
 
-    # Exampled WantedVillagers for Zorlandia for user Kate
+    # Exampled WantedVillagers for user 'Kate' on island 'Zorlandia'
     wanted_villagers = [
     WantedVillagers(
         villager_id=Villager.query.filter_by(name="Gloria").first().id,
@@ -152,6 +152,15 @@ def seed_tables():
     WantedVillagers(
         villager_id=Villager.query.filter_by(name="Gwen").first().id,
         island_id=1
+    ),
+    # Example WantedVillagers for User 'Isaboo' on island 'PuppyLand'
+    WantedVillagers(
+        villager_id=Villager.query.filter_by(name="Ankha").first().id,
+        island_id=2
+    ),
+    WantedVillagers(
+        villager_id=Villager.query.filter_by(name="Cookie").first().id,
+        island_id=2
     )
 ]
 
@@ -159,17 +168,25 @@ def seed_tables():
     db.session.commit()
 
     # Example notes for WantedVillagers for Zorlandia
-    # notes = [
-    #     Note(
-    #         wanted_villagers_id=1,
-    #         notes="She has purple hair & pretty makeup."
-    #     ),
-    #     Note(
-    #     wanted_villagers_id=3,
-    #     notes="She has purple hair & pretty makeup too."
-    #     )
-    # ]
-    # db.session.add_all(notes)
-    # db.session.commit()
+    notes = [
+        Note(
+            wanted_villagers_id=1,
+            notes="She has purple hair & pretty makeup."
+        ),
+        Note(
+        wanted_villagers_id=2,
+        notes="She has purple hair & pretty makeup too."
+        ),
+        Note(
+            wanted_villagers_id=3,
+            notes="Kitty!"
+        ),
+        Note(
+        wanted_villagers_id=4,
+        notes="She's a pink cutie"
+        )
+    ]
+    db.session.add_all(notes)
+    db.session.commit()
 
     print("Tables seeded")

@@ -13,12 +13,36 @@ villager_bp = Blueprint('villager', __name__, url_prefix="/villagers")
 # /villagers - GET - fetch all villagers - R
 @villager_bp.route("/", methods=["GET"])
 def get_all_villagers():
-    # Select all villagers and order them by their id in ascending order
-    stmt = db.select(Villager).order_by(Villager.id.asc())
-    stmt = db.select(Villager)
-    villagers = db.session.scalars(stmt)
-    # Return the list of villagers
-    return villagers_schema.dump(villagers)
+    # # Select all villagers and order them by their id in ascending order
+    # stmt = db.select(Villager).order_by(Villager.id.asc())
+    # stmt = db.select(Villager)
+    # villagers = db.session.scalars(stmt)
+    # # Return the list of villagers
+    # return villagers_schema.dump(villagers)
+
+# Get the name from query parameters if provided
+    villager_name = request.args.get('name')
+    # If a villager name is provided
+    if villager_name:
+        # fetch the villager by name
+        stmt = db.select(Villager).filter_by(name=villager_name)
+        villager = db.session.scalar(stmt)
+        # If villager exists
+        if villager:
+            # return the villager data
+            return villager_schema.dump(villager)
+        # else
+        else:
+            # Return an error if villager is not found
+            return {"error": f"Villager with name '{villager_name}' not found"}, 404
+    else:
+        # Select all villagers and order them by their id in ascending order
+        stmt = db.select(Villager).order_by(Villager.id.asc())
+        villagers = db.session.scalars(stmt)
+        # Return the list of villagers
+        return villagers_schema.dump(villagers)
+
+
 
 # /villagers/<id> - GET - fetch a single villager - R
 @villager_bp.route("/<int:villager_id>", methods=["GET"])
@@ -46,7 +70,7 @@ def create_villager():
         # return error message
         return{"Error": "User is not authorised to perform this action."}, 403
     # Select a villager by id
-    
+
     # Get the data from the body of the request
     body_data = request.get_json()
     # Get user id from JWT token
@@ -121,6 +145,14 @@ def delete_villager(villager_id):
 @villager_bp.route("/<int:villager_id>",  methods=["PUT","PATCH"])
 @jwt_required()
 def update_villager(villager_id):
+
+    # check if user is admin or not
+    is_admin = authorise_as_admin()
+    # if not admin
+    if not is_admin:
+        # return error message
+        return{"Error": "User is not authorised to perform this action."}, 403
+    
     # get the data from the body of the request
     body_data = request.get_json()
 
