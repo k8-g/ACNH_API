@@ -39,6 +39,14 @@ def get_villager(villager_id):
 @villager_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_villager():
+    # check if user is admin or not
+    is_admin = authorise_as_admin()
+    # if not admin
+    if not is_admin:
+        # return error message
+        return{"Error": "User is not authorised to perform this action."}, 403
+    # Select a villager by id
+    
     # Get the data from the body of the request
     body_data = request.get_json()
     # Get user id from JWT token
