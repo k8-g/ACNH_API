@@ -262,7 +262,7 @@ def delete_island_villager(island_villager_id):
     if island_villager:
         # Check if the user is the owner of the island villager list
         if str(island_villager.island.user_id) != user_id:
-            return {"error": "You do not have permission to view this island villager."}, 403
+            return {"error": "You are not the owner of this island's villager list"}, 403
         
         # Retrieve the villager details
         villager = db.session.scalar(db.select(Villager).filter_by(id=island_villager.villager_id))

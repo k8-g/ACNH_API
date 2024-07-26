@@ -135,6 +135,14 @@ def seed_tables():
         IslandVillager(
 	        island_id=1,
 	        villager_id=57
+        ),
+        IslandVillager(
+	        island_id=2,
+	        villager_id=433
+        ),
+        IslandVillager(
+	        island_id=2,
+	        villager_id=434
         )
     ]
 
