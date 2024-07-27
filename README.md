@@ -26,45 +26,90 @@ A Trello board was extensively used throughout the entire duration of the projec
 ### Trello Screenshots
 Trello board
 ![Trello board](/docs/Trello%20Screenshots/Trello%20board.png)
+
+
 Rough ERD
 ![Draw rough ERD](/docs/Trello%20Screenshots/Draw%20rough%20ERD.png)
+
+
 Submit Rough ERD
 ![Submit Rough ERD](/docs/Trello%20Screenshots/Submit%20rough%20ERD.png)
+
+
 Updated ERD
 ![Updated ERD](/docs/Trello%20Screenshots/Updated%20ERD.png)
+
+
 Feature/Authenication
 ![Feature/Authenication](/docs/Trello%20Screenshots/Feature:authenication.png)
+
+
 Models
 ![Models](/docs/Trello%20Screenshots/Models.png)
+
+
 Schemas
 ![Schemas](/docs/Trello%20Screenshots/Schemas.png)
+
+
 Feature/Controllers
 ![Feature/Controllers](/docs/Trello%20Screenshots/Feature:controllers.png)
+
+
 Feature/Islands
 ![Feature/Islands](/docs/Trello%20Screenshots/Feature:islands.png)
+
+
 Feature/Villagers
 ![Feature/Villagers](/docs/Trello%20Screenshots/Feature:villagers.png)
+
+
 Feature/WantedVillagers
 ![Feature/WantedVillagers](/docs/Trello%20Screenshots/Feature:wanted%20villagers.png)
+
+
 Feature/Notes
 ![Feature/Notes](/docs/Trello%20Screenshots/Feature:notes.png)
-![Feature/Validation](/docs/Trello%20Screenshots/Feature:validation.png)
+
+
 Feature/Validation
-![Feature/Authorisation](/docs/Trello%20Screenshots/Feature:authorisation.png)
+![Feature/Validation](/docs/Trello%20Screenshots/Feature:validation.png)
+
+
 Feature/Authorisation
+![Feature/Authorisation](/docs/Trello%20Screenshots/Feature:authorisation.png)
+
+
+Models/islands
 ![Models/islands](/docs/Trello%20Screenshots/Models:islands.png)
+
+
 Models/villagers
 ![Models/villagers](/docs/Trello%20Screenshots/Models:villagers.png)
+
+
 Models/island_villagers
 ![Models/island_villagers](/docs/Trello%20Screenshots/Models:island_villagers.png)
+
+
 Models/wanted_villagers
 ![Models/wanted_villagers](/docs/Trello%20Screenshots/Feature:wanted%20villagers.png)
+
+
 Models/notes
 ![Models/notes](/docs/Trello%20Screenshots/Models:note.png)
+
+
 Models/user
 ![Models/user](/docs/Trello%20Screenshots/Models:user.png)
 
 
+Add Villager data
+![Add Villager data](/docs/Trello%20Screenshots/Add%20villager%20data.png)
+
+
+Add email lowercase code
+![Add email lowercase](/docs/Trello%20Screenshots/Add%20email%20lowercase.png)
 
 
 ## R3. List and explain the third-party services, packages and dependencies used in this app.
