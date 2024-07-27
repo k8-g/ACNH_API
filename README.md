@@ -652,22 +652,92 @@ Response:
 	"islands": []
 }
 ```
+- Name is required
+- Password is required
+- Email is required
 
- - Email converts to lowercase
-
+- Email converts to lowercase
+	- `email = email.lower()` in POST /register section in [auth_controller](/src/controllers/auth_controller.py)
+- Email has a requirement of proper email format (e.g. user@email.com)
+- Password has a requirement of minimum six characters, at least one letter and one number
+	- Both as per [user.py](/src/models/user.py)
+- Email must be unique, Integrity Error message pops up if not
+	- as per line 43+ in [auth_controller.py](/src/controllers/auth_controller.py)
 
 ![Insomnia test: POST Register New User](/docs/Screenshots/1.%20GET%20auth:register.png)
 
-Fail: Missing required field
+
+Fail: Missing email field
 
 JSON body:
 ```
 {
-	"id": 4,
 	"name": "Sami",
 
-	"is_admin": false,
-	"islands": []
+    "password": "password123"
+}
+```
+Response:
+```
+{
+	"error": "Password is required."
+}
+```
+- Error handling for missing password
+
+![Insomnia test: POST Register New User](/docs/Screenshots/1.%20auth:register%20no%20email.png)
+
+Fail: Missing password field
+
+JSON body:
+```
+{
+	"name": "Sami",
+
+	"password": "password123"
+}
+```
+Response:
+```
+{
+	"error": "Email is required."
+}
+```
+- Error handling for missing email
+
+![Insomnia test: POST Register New User](/docs/Screenshots/1.%20auth:register%20no%20password.png)
+
+
+Fail: Email already in use
+
+JSON body:
+```
+{
+    "name": "Sami",
+	"email": "kate@email.com",
+    "password": "password123"
+}
+```
+Response:
+```
+{
+	"error": "Email address already in use"
+}
+```
+
+- Email already in use integrity error handling
+
+
+
+![Insomnia test: POST register new user with email already in use](/docs/Screenshots/1.%20auth:register%20email%20already%20in%20use.png)
+
+Fail: No email or password provided
+
+JSON body:
+```
+{
+    "name": "Sami",
+
 }
 ```
 Response:
@@ -676,13 +746,14 @@ Response:
 	"error": {
 		"email": [
 			"Missing data for required field."
+		],
+		"password": [
+			"Missing data for required field."
 		]
 	}
 }
 ```
-
-![Insomnia test: POST Register New User](/docs/Screenshots/1.%20GET%20auth:register%20fail.png)
-
+![Insomnia test: GET register user](/docs/Screenshots/1.%20auth:register%20no%20email%20or%20pw.png)
 
 **Logging in as registered user**
 - HTTP verb: POST

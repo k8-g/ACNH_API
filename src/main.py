@@ -24,6 +24,10 @@ def create_app():
     def validation_error(err):
         return {"error": err.messages}, 400
 
+    # Error handler for generic bad requests
+    @app.errorhandler(400)
+    def bad_request(err):
+        return {"error": "Bad request"}, 400
 
      # Import and register blueprints
     from controllers.cli_controller import db_commands
