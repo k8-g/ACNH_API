@@ -281,6 +281,160 @@ Functionalities of SQLAlchemy ORM in the ACNH API
 - Session Management:
     - SQLAlchemy’s session management ensures that all changes to the database are tracked and committed in a transactional way. This helps maintain data integrity.
 
+
+### Some functionalities of this particular ACNH API Webserver:
+
+- Villager data is seeded via an [.CSV](/src/data/acnh_villager_data.csv) file located in the [data folder](/src/data/)
+
+- The following code was put in [cli_controller.py](/src/controllers/cli_controller.py), to import the .csv file containing the villager data to be seeded into the database;
+	```
+	# Define the path to the CSV file
+		csv_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'acnh_villager_data.csv')
+
+		# Check if the file exists
+		if not os.path.exists(csv_path):
+			print(f"Error: CSV file not found at path: {csv_path}")
+			return
+
+		# Read villager data from CSV file
+		with open(csv_path, newline='') as csvfile:
+			reader = csv.DictReader(csvfile)
+			villagers = []
+			for row in reader:
+				villager = Villager(
+					id=int(row['id']),
+					name=row['name'],
+					gender=row['gender'],
+					species=row['species'],
+					personality=row['personality'],
+					birthday=row['birthday'],
+					catchphrase=row['catchphrase'],
+					hobbies=row['hobbies']
+				)
+				villagers.append(villager)
+		# Add villager data to the database session
+		db.session.bulk_save_objects(villagers)
+		db.session.commit()
+	```
+
+- A villager's data can be added to an user's WantedVillager list by querying the villager's name to get the villager's ID number. So even if a user doesn't know the villager's ID but they know their name, they can add the villager to their Wanted Villager list.
+
+	- In [wanted_villagers_controllers.py](/src/controllers/wanted_villagers_controller.py) POST method:
+	```
+		# Look up the villager's ID based on the name provided in the request body
+		villager_name = body_data.get('villager_name')
+		villager = Villager.query.filter_by(name=villager_name).first()
+		# If villager does not exist
+		if not villager:
+			# return an error
+			return {"error": f"Villager with name {villager_name} not found"}, 404
+	```
+- Minimum character requirements regarding registering:
+	- Email converts to lowercase
+		- `email = email.lower()` in POST /register section in [auth_controller](/src/controllers/auth_controller.py)
+	- Email has a requirement of proper email format (e.g. user@email.com)
+	- Password has a requirement of minimum six characters, at least one letter and one number
+		- Both as per [user.py](/src/models/user.py)
+	- Email must be unique, Integrity Error message pops up if not
+		- as per line 43+ in [auth_controller.py](/src/controllers/auth_controller.py)
+
+- Code checking if user is owner of:
+	- if user is owner of island 
+	
+	e.g. exerpt from [island_controller.py](/src/controllers/island_controller.py);
+	```
+	    # if island exists
+    if island:
+        user_id = get_jwt_identity()
+        # check if the user is the owner of the island
+        if str(island.user_id) != user_id:
+            # if not correct user, return message
+            return {"error": "You are not the owner of this island."}, 403
+	```
+	- if user is owner of island villagers
+
+	exerpt from [island_villagers_controller.py](/src/controllers/island_villagers_controller.py);
+	```
+	    # If island villager requested exists
+    if island_villager:
+        # Check if the user is the owner of the island villager list
+        if str(island_villager.island.user_id) != user_id:
+            return {"error": "You are not the owner of this island's villager list"}, 403
+	```
+	- if user is owner of wanted villagers
+
+	exerpt from [wanted_villagers_controller.py](/src/controllers/wanted_villagers_controller.py);
+	```
+	        # If the user is an admin or the owner of the island
+        if user.is_admin or str(wanted_villager.island.user_id) == user_id:
+            # return the wanted villager data
+            return wanted_villager_schema.dump(wanted_villager)
+        else:
+            return {"error": "You are not the owner of this island's wanted villager list."}, 403
+	```
+	
+- Code allowing admin permissions:	
+	- admin can see all user's data
+
+	E.g. from [island_controller.py](/src/controllers/island_controller.py);
+	```
+	@island_bp.route("/", methods=['GET'])
+	@jwt_required()
+	def get_all_islands():
+		# Check user id via token
+		user_id = get_jwt_identity()
+		# Select the user to check if they are admin
+		stmt = db.select(User).filter_by(id=user_id)
+		user = db.session.scalar(stmt)
+		# If the user is an admin, select all islands
+		if user.is_admin:
+			stmt = db.select(Island)
+		else:
+			# Otherwise, select only islands belonging to the user
+			stmt = db.select(Island).filter_by(user_id=user_id)
+		islands = db.session.scalars(stmt)
+		# Return the island data
+		return islands_schema.dump(islands)
+	```
+	- admin can create, update or delete villager data
+
+	e.g. excerpt from the DELETE method in [villager_controller.py](/src/controllers/villager_controller.py);
+	```
+    # check if user is admin or not
+    is_admin = authorise_as_admin()
+    # if not admin
+    if not is_admin:
+        # return error message
+        return{"Error": "User is not authorised to perform this action."}, 403
+	```
+	- admin can delete a user
+
+	e.g. exerpt from DELETE method in [auth_controller.py](/src/controllers/auth_controller.py);
+	```
+	# # /auth/users/user_id - DELETE
+	@auth_bp.route("/users/<int:user_id>", methods=["DELETE"])
+	@jwt_required()
+	@auth_as_admin_decorator
+	def delete_user(user_id):
+		# find the user with the id from DB
+		stmt = db.select(User).filter_by(id=user_id)
+		user = db.session.scalar(stmt)
+		# if user exists
+		if user:
+			# delete the user
+			db.session.delete(user)
+			db.session.commit()
+			# return a message
+			return {"message": f"User with id {user_id} deleted"}
+		# else
+		else:
+			# return error saying user does not exist
+			return {"error": f"User with id {user_id} not found"}, 404
+	```
+
+
+
+
 ## R6. Design an entity relationship diagram (ERD) for this app’s database, and explain how the relations between the diagrammed models will aid the database design. 
 This should focus on the database design BEFORE coding has begun, eg. during the project planning or design phase.
 
@@ -413,6 +567,7 @@ Final ERD as below:
 		hobbies = db.Column(db.String, nullable=False)
 	```
 
+
 ---
 
 
@@ -499,8 +654,7 @@ Final ERD as below:
     notes = db.relationship('Note', back_populates='wanted_villager')
     ```
 
----
-
+----
 
 - Notes: This table contains any notes a user might write about their Wanted Villagers. Here they can write what they might need to  invite a villager, what they like about them, etc.
 
@@ -657,13 +811,6 @@ Response:
 - Password is required
 - Email is required
 
-- Email converts to lowercase
-	- `email = email.lower()` in POST /register section in [auth_controller](/src/controllers/auth_controller.py)
-- Email has a requirement of proper email format (e.g. user@email.com)
-- Password has a requirement of minimum six characters, at least one letter and one number
-	- Both as per [user.py](/src/models/user.py)
-- Email must be unique, Integrity Error message pops up if not
-	- as per line 43+ in [auth_controller.py](/src/controllers/auth_controller.py)
 
 ![Insomnia test: POST Register New User](/docs/Screenshots/1.%20GET%20auth:register.png)
 
@@ -1095,7 +1242,7 @@ Response:
 ![Insomnia test: GET /islands/3](/docs/Screenshots/5.%20GET%20islands:3%20fail.png)
 
 - Probably should have added a decorator function that checks if user is owner in island_controller
-	- as three of the 4 code sections check this
+	- as three of the four code sections check this
 	- doing this would avoid code repetition
 	- not enough time to implement this function
 
