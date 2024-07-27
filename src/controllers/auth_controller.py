@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from flask import Blueprint, request
 from sqlalchemy.exc import IntegrityError
+from marshmallow import ValidationError
 from psycopg2 import errorcodes
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -40,19 +41,34 @@ def register_user():
         return user_schema.dump(user), 201
     
     except IntegrityError as err:
+
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return {"error": f"Missing information; {err.orig.diag.column_name} is required"}, 409
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
             return {"error": "Email address already in use"}, 409
-
+        
+    # except ValidationError as err:
+    #         return {"error": err.messages}, 400
 
 @auth_bp.route('/login', methods=['POST'])
 def login_user():
-    # get the data from the body of the request
+    # Get the data from the body of the request
     body_data = request.get_json()
-    email = body_data.get("email").lower()
+    email = body_data.get("email")
+    password = body_data.get("password")
+
+    # Check if email is provided
+    if not email:
+        return {"error": "Email is required."}, 400
+
+    # Check if password is provided
+    if not password:
+        return {"error": "Password is required."}, 400
+    
+    # Convert email to lowercase
+    email = email.lower()
+    
     # find the user in the database with that email
-    # stmt = db.select(User).filter_by(email=body_data.get("email"))
     stmt = db.select(User).filter_by(email=email)
     user = db.session.scalar(stmt)
     # if user exists and password matches
