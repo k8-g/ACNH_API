@@ -57,14 +57,22 @@ def login_user():
     email = body_data.get("email")
     password = body_data.get("password")
 
-    # Check if email is provided
+    # if both email and password are not provided
+    if not email and not password:
+        # return this error message 
+        return {"error": "Email and password are required."}, 400
+
+    # if only email is not provided
     if not email:
+        # return this error message
         return {"error": "Email is required."}, 400
 
-    # Check if password is provided
+    # if only password is not provided
     if not password:
+        # return this error message
         return {"error": "Password is required."}, 400
     
+
     # Convert email to lowercase
     email = email.lower()
     

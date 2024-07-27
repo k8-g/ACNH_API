@@ -667,47 +667,6 @@ Response:
 ![Insomnia test: POST Register New User](/docs/Screenshots/1.%20GET%20auth:register.png)
 
 
-Fail: Missing email field
-
-JSON body:
-```
-{
-	"name": "Sami",
-
-    "password": "password123"
-}
-```
-Response:
-```
-{
-	"error": "Email is required."
-}
-```
-- Error handling for missing email
-
-![Insomnia test: POST Register New User](/docs/Screenshots/1.%20auth:register%20no%20email.png)
-
-Fail: Missing password field
-
-JSON body:
-```
-{
-	"name": "Sami",
-	"email": "Sami@kitty.com"
-
-}
-```
-Response:
-```
-{
-	"error": "Password is required."
-}
-```
-- Error handling for missing password
-
-![Insomnia test: POST Register New User](/docs/Screenshots/1.%20auth:register%20no%20password.png)
-
-
 Fail: Email already in use
 
 JSON body:
@@ -728,10 +687,10 @@ Response:
 - Email already in use integrity error handling
 
 
-
 ![Insomnia test: POST register new user with email already in use](/docs/Screenshots/1.%20auth:register%20email%20already%20in%20use.png)
 
-Fail: No email or password provided
+
+Fail: If both email and password are missing
 
 JSON body:
 ```
@@ -753,7 +712,12 @@ Response:
 	}
 }
 ```
-![Insomnia test: GET register user](/docs/Screenshots/1.%20auth:register%20no%20email%20or%20pw.png)
+
+- Validation error handling
+
+![Insomnia test: POST register new user with missing fields](/docs/Screenshots/1.%20auth:register%20fail%20no%20email%20or%20password.png)
+
+---
 
 **Logging in as registered user**
 - HTTP verb: POST
@@ -785,6 +749,7 @@ Response:
 ![Insomnia test: POST Login User](/docs/Screenshots/2.%20GET%20auth:login.png)
 
 Fail: If incorrect email or password used
+
 JSON Body:
 ```
 {
@@ -801,6 +766,66 @@ Response:
 ```
 ![Insomnia test: POST Login User](/docs/Screenshots/2.%20GET%20auth:login%20fail.png)
 
+Fail: Missing email field
+
+JSON body:
+```
+{
+	"name": "Sami",
+
+    "password": "password123"
+}
+```
+Response:
+```
+{
+	"error": "Email is required."
+}
+```
+- Error handling for missing email
+
+![Insomnia test: POST Register New User](/docs/Screenshots/2.%20auth:login%20no%20email.png)
+
+Fail: Missing password field
+
+JSON body:
+```
+{
+	"name": "Sami",
+	"email": "Sami@kitty.com"
+
+}
+```
+Response:
+```
+{
+	"error": "Password is required."
+}
+```
+- Error handling for missing password
+
+![Insomnia test: POST Register New User](/docs/Screenshots/2.%20auth:login%20no%20password.png)
+
+Fail: If BOTH email and password are missing
+
+JSON body:
+```
+{
+	"name": "Sami"
+
+
+}
+```
+Response:
+```
+{
+	"error": "Email and password are required."
+}
+```
+
+![Insomnia test: POST Login user](/docs/Screenshots/2.%20auth:login%20no%20email%20or%20password.png)
+
+---
 
 **Deleting user**
 - HTTP verb: DELETE
@@ -824,6 +849,7 @@ Response:
 ![Insomnia test: DELETE User](/docs/Screenshots/DELETE%20user.png)
 
 Fail: If a non-admin user tries to delete
+
 JSON Body:
 ```
 -
@@ -836,7 +862,7 @@ Response:
 ```
 ![Insomnia test: Delete User](/docs/Screenshots/DELETE%20user%20not%20admin.png)
 
-
+---
 #### Island Routes
 **Creating an Island**
 
@@ -882,7 +908,7 @@ Response:
 ```
 ![Insomnia test: POST New Island Fail](/docs/Screenshots/3.%20POST%20island%20fail.png)
 
-
+----
 **Get all islands**
 
 - HTTP verb: GET
@@ -909,7 +935,7 @@ Response:
 ```
 
 - User can see their own islands while logged in
-	- but not others' islands
+	- but not others islands
 
 ![Insomnia test: GET /islands user](/docs/Screenshots/4.%20GET%20island%20kate.png)
 
@@ -937,7 +963,7 @@ Response:
 ```
 
 - User can see their own islands while logged in
-	- but not others' islands
+	- but not others islands
 
 ![Insomnia test: GET /islands user](/docs/Screenshots/4.%20GET%20islands%20isaboo.png)
 
@@ -976,6 +1002,7 @@ Response:
 
 ![Insomnia test: GET /islands](/docs/Screenshots/4.%20Get%20islands%20admin.png)
 
+----
 **Get one island**
 - HTTP verb: GET
 - Route: http://localhost:8081/islands/1
@@ -1053,6 +1080,8 @@ Response:
 - Route: http://localhost:8081/islands/3
 - Any required body (json) or header data (auth/jwt):
     - Auth Bearer Token/JWT required - Either user or Admin
+
+
 Fail: Island ID not found
 
 Response:
@@ -1069,6 +1098,8 @@ Response:
 	- doing this would avoid code repetition
 	- not enough time to implement this function
 
+---
+
 **Updating an Island**
 - HTTP verb: PATCH
 - Route: http://localhost:8081/islands/3
@@ -1082,6 +1113,7 @@ JSON body:
 	}
 ```
 Correct user & correct island ID No.
+
 Response:
 
 ```
@@ -1111,6 +1143,8 @@ Fail: Wrong user/jwt
 
 ![Insomnia test: PATCH /islands/3](/docs/Screenshots/6.%20PATCH%20islands%20fail.png)
 
+---
+
 **Deleting an Island**
 - HTTP verb: DELETE 
 - Route: http://localhost:8081/islands/3
@@ -1122,6 +1156,7 @@ JSON body:
 -
 ```
 Correct JWT
+
 Response:
 ```
 {
@@ -1139,6 +1174,7 @@ Response:
     - Auth Bearer Token/JWT Required - User Kate
 
 Fail: Incorrect JWT
+
 Response:
 ```
 {
@@ -1150,6 +1186,7 @@ Response:
 - Code checks if user is owner of island before allowing to execute deletion
 	- if not, error message comes up
 
+---
 
 #### Villager Routes
 
@@ -1209,6 +1246,8 @@ Response:
 
 ![Insomnia test: GET /villagers](/docs/Screenshots/9.%20GET%20:villagers.png)
 
+---
+
 **Get one villager**
 
 - HTTP verb: GET 
@@ -1217,6 +1256,7 @@ Response:
     - Auth Bearer Token/JWT required - No
 
 - Using Villager ID No.
+
 JSON body:
 ```
 -
@@ -1246,8 +1286,10 @@ Response:
 ![Insomnia test: GET /villagers?name=Judy](/docs/Screenshots/11.%20GET%20:villagers%20judy.png)
 
 Fail - Villager ID doesn't exist
+
 ![Insomnia test: GET /villagers/1](/docs/Screenshots/10.%20GET%20villagers%20fail.png)
 
+---
 
 **Creating new villager**
 - HTTP verb: POST
@@ -1279,6 +1321,7 @@ Response:
 
 ![Insomnia test: POST /villagers](/docs/Screenshots/8.%20POST%20:villagers.png)
 
+---
 
 **Creating a new villager**
 Logged in as Admin
@@ -1316,6 +1359,7 @@ Response:
 
 ![Insomnia test: POST /villagers](/docs/Screenshots/POST%20villagers%20admin.png)
 
+---
 
 **Updating Villager**
 - HTTP verb: PATCH 
@@ -1342,6 +1386,7 @@ Response:
 
 ![Insomnia test: PATCH /villagers](/docs/Screenshots/13.%20PATCH%20:villagers.png)
 
+----
 
 **Updating a villager**
 Logged in as admin
@@ -1369,7 +1414,10 @@ Response:
 	"hobbies": "Fitness"
 }
 ```
+
 ![Insomnia test: PATCH /villagers/1](/docs/Screenshots/PATCH%20villagers%20admin.png)
+
+---
 
 **Deleting a villager**
 - HTTP verb: DELETE 
@@ -1382,12 +1430,14 @@ JSON body:
 -
 ```
 Fail: User tries to delete villager
+
 Response:
 ```
 {
 	"Error": "User is not authorised to perform this action."
 }
 ```
+
  - Only admin is authorised to delete a villager
  - Villager data is preset, not to be changed
 
@@ -1412,6 +1462,8 @@ Response:
 
 ![Insomnia test: DELETE /villagers/1](/docs/Screenshots/DELETE%20villagers%20admin.png)
 
+
+---
 
 #### Island Villagers Routes
 **GET Island Villagers**
@@ -1559,6 +1611,7 @@ Response:
 
 Logged in as User Kate
  - A logged in user can only view their own island villagers
+
 ![Insomnia test: GET island_villagers](/docs/Screenshots/14.%20GET%20island_villagers.png)
 
 Logged in as Admin
@@ -1741,6 +1794,7 @@ Response:
 
 Logged in as Admin
  - Admin can view all island's island villagers
+
 ![Insomnia test: GET island villagers as Admin](/docs/Screenshots/15.%20GET%20island%20villagers%20admin.png)
 
 Logged in as User Isaboo
@@ -1797,7 +1851,10 @@ Response:
 
 Logged in as User Isaboo
  - A logged in user can only view their own island villagers
+
 ![Insomnia test: GET island villagers ](/docs/Screenshots/16.%20GET%20island%20villagers%20isaboo.png)
+
+----
 
 **Updating Island Villager**
 
@@ -1873,6 +1930,7 @@ Response:
 ![Insomnia test: PATCH /island_villagers](/docs/Screenshots/17.%20PATCH%20:island%20villagers.png)
 
 Fail: Trying to update island villager ID instead of text
+
 JSON body:
 ```
 {
@@ -1907,7 +1965,7 @@ Response:
 
 ![Insomnia test: PATCH /island_villagers](/docs/Screenshots/18.%20PATCH%20island%20villagers%20wrong%20user.png)
 
-
+---
 
 **Deleting Island Villager**
 
@@ -1922,6 +1980,7 @@ JSON body:
 -
 ```
 Correct user/jwt deleting - User Kate
+
 Response:
 ```
 {
@@ -1934,6 +1993,7 @@ Response:
 ![Insomnia test: DELETE /island_villagers/7](/docs/Screenshots/19.%20DELETE%20island%20villagers.png)
 
 Fail: Incorrect jwt/wrong user trying to delete - User Isaboo
+
 Response:
 ```
 {
@@ -1943,6 +2003,7 @@ Response:
 ![Insomnia test: DELETE /island_villagers/7](/docs/Screenshots/20.%20DELETE%20island%20villagers%20wrong%20jwt.png)
 
 Fail: Island Villager doesn't exist in list
+
 Response:
 ```
 {
@@ -1952,6 +2013,7 @@ Response:
 
 ![Insomnia test: DELETE /island_villagers/7](/docs/Screenshots/21.%20DELETE%20island%20villager%20doesn't%20exist.png)
 
+---
 
 #### Wanted Villager Routes
 **GET All Wanted Villagers**
@@ -1967,6 +2029,7 @@ JSON body:
 -
 ```
 Correct user/jwt - Logged in as User Kate
+
 Response:
 ```
 [
@@ -2010,9 +2073,11 @@ Response:
 ```
 
 - A logged in User can view their own wanted villagers list
+
 ![Insomnia test: GET /wanted_villagers](/docs/Screenshots/22.%20GET%20wanted%20villagers.png)
 
 Logged in as admin
+
 Response:
 ```
 [
@@ -2112,9 +2177,11 @@ Response:
 ```
 
 - Admin can view all wanted villagers of all islands
+
 ![Insomnia test: GET /wanted_villagers](/docs/Screenshots/23.%20GET%20wanted%20villagers%20admin.png)
 
 Logged in as Isaboo
+
 Response:
 ```
 [
@@ -2167,7 +2234,10 @@ Response:
 ]
 ```
 - A logged in User can view their own wanted villagers list
+
 ![Insomnia test: GET /wanted_villagers](/docs/Screenshots/24.%20GET%20wanted%20villagers%20isaboo.png)
+
+---
 
 **Get One Wanted Villager**
 
@@ -2212,14 +2282,17 @@ Fail: Wrong user/jwt accessing another user's wanted villager
 - Route: http://localhost:8081/wanted_villagers/1
 - Any required body (json) or header data (auth/jwt):
     - Auth Bearer Token/JWT required - User Isaboo
+
 Response:
 ```
 {
 	"error": "You do not have permission to view this wanted villager."
 }
 ```
+
 ![Insomnia test: GET /wanted_villagers/1](/docs/Screenshots/25.%20GET%20one%20wanted%20villager%20wrong%20jwt.png)
 
+---
 **Add New Wanted Villager**
 
 Logged in as User Kate
@@ -2260,6 +2333,7 @@ Response:
 ![Insomnia test: POST /wanted_villagers](/docs/Screenshots/26.%20POST%20wanted%20villagers.png)
 
 Fail: Tries to add Wanted Villager to Island ID that does not exist
+
 JSON body:
 ```
 {
@@ -2273,7 +2347,10 @@ Response:
 	"error": "Island with id 3 not found"
 }
 ```
+
 ![Insomnia test: POST /wanted_villagers](/docs/Screenshots/26.%20POST%20wanted%20villagers%20fail.png)
+
+---
 
 **Update Wanted Villager**
 
@@ -2297,6 +2374,8 @@ Response:
 
 ![Insomnia test: PATCH /wanted_villagers](/docs/Screenshots/27.%20PATCH%20wanted%20villagers.png)
 
+---
+
 **Delete Wanted Villager**
 
 Logged in as User Kate
@@ -2306,6 +2385,7 @@ Logged in as User Kate
     - Auth Bearer Token/JWT required - User Kate
 
 Correct jwt/correct wanted_villager_id
+
 JSON body:
 ```
 {
@@ -2323,25 +2403,32 @@ Response:
 ![Insomnia test: DELETE /wanted_villagers/8](/docs/Screenshots/28.%20DELETE%20wanted%20villagers.png)
 
 Fail: Wanted Villager id doesn't exist
+
 Response:
 ```
 {
 	"error": "Wanted villager entry not found"
 }
 ```
+
 ![Insomnia test: DELETE /wanted_villagers/8](/docs/Screenshots/29.%20DELETE%20wanted%20villager%20id%20doesn't%20exist.png)
 
+
 Fail: Wanted Villager ID not belonging to you
+
 Response:
 ```
 {
 	"error": "You are not the owner of this island's wanted villager list."
 }
 ```
+
 ![Insomnia test: DELETE /wanted_villagers/4](/docs/Screenshots/30.%20DELETE%20wanted%20villager%20not%20yours.png)
 
+---
 
 #### Notes Routes
+
 **Create note about Wanted Villager**
 
 Logged in as User Kate
@@ -2351,6 +2438,7 @@ Logged in as User Kate
     - Auth Bearer Token/JWT required - User Kate
 
 Correct jwt
+
 JSON body:
 ```
 {
@@ -2388,6 +2476,7 @@ Response:
 ![Insomnia test: POST /wanted_villagers/1/notes](/docs/Screenshots/31.%20POST%20notes.png)
 
 Incorrect JSON body data
+
 JSON body:
 ```
 {
@@ -2402,9 +2491,11 @@ Response:
     "error": "Either wanted_villagers_id or villager_name must be provided"
 }
 ```
+
 ![Insomnia test: POST /wanted_villagers/1/notes](/docs/Screenshots/32.%20POST%20notes%20incorrect%20body%20data.png)
 
 Incorrect jwt/wrong user
+
 JSON body:
 ```
 {
@@ -2421,6 +2512,8 @@ Response:
 
 ![Insomnia test: POST /wanted_villagers/1/notes](/docs/Screenshots/33.%20POST%20notes%20wrong%20user.png)
 
+---
+
 **Update note about Wanted Villager**
 
 Logged in as User Kate
@@ -2428,7 +2521,6 @@ Logged in as User Kate
 - Route: http://localhost:8081/wanted_villagers/1/notes/1
 - Any required body (json) or header data (auth/jwt):
     - Auth Bearer Token/JWT required - User Kate
-
 
 JSON body:
 ```
@@ -2476,6 +2568,7 @@ Response:
     "error": "You are not the owner of this island's wanted villager list"
 }
 ```
+
 ![Insomnia test: PATCH /wanted_villagers/1/notes](/docs/Screenshots/35.%20PATCH%20notes%20incorrect%20jwt.png)
 
 Incorrect JSON body data/wrong villager name for the wanted villager id
@@ -2493,7 +2586,10 @@ Response:
     "Note with id 1 not found for the specified wanted villager"
 }
 ```
+
 ![Insomnia test: POST /wanted_villagers/1/notes/1](/docs/Screenshots/36.%20PATCH%20notes%20wrong%20villager%20name.png)
+
+---
 
 **Delete note about Wanted Villager**
 
@@ -2504,6 +2600,7 @@ Logged in as User Kate
     - Auth Bearer Token/JWT required - User Kate
 
 Correct jwt
+
 JSON body:
 ```
 -
@@ -2526,5 +2623,6 @@ Response:
     "error": "You are not the author or this note" 
 }
 ```
+
 ![Insomnia test: DELETE /wanted_villagers/1/notes](/docs/Screenshots/38.%20DELETE%20note%20incorrect%20jwt.png)
 
