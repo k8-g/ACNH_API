@@ -282,7 +282,7 @@ Functionalities of SQLAlchemy ORM in the ACNH API
     - SQLAlchemy’s session management ensures that all changes to the database are tracked and committed in a transactional way. This helps maintain data integrity.
 
 
-### Some functionalities of this particular ACNH API Webserver:
+### Some features & functionalities of this particular ACNH API Webserver:
 
 - Villager data is seeded via an [.CSV](/src/data/acnh_villager_data.csv) file located in the [data folder](/src/data/)
 
@@ -329,6 +329,20 @@ Functionalities of SQLAlchemy ORM in the ACNH API
 			# return an error
 			return {"error": f"Villager with name {villager_name} not found"}, 404
 	```
+- When using the GET method for WantedVillagers, a user can see only their own Wanted Villagers but an admin can see all WantedVillagers
+
+	- Excerpt from [wanted_villagers_controller.py](/src/controllers/wanted_villagers_controller.py);
+	```
+		# If the user is an admin
+	    if user.is_admin:
+        # fetch all wanted villagers
+        stmt = db.select(WantedVillagers).order_by(WantedVillagers.id.asc())
+	# else if the user is not an admin
+    else:
+        # fetch only their wanted villagers
+        stmt = db.select(WantedVillagers).join(Island).filter(Island.user_id == user_id).order_by(WantedVillagers.id.asc())
+	```
+
 - Minimum character requirements regarding registering:
 	- Email converts to lowercase
 		- `email = email.lower()` in POST /register section in [auth_controller](/src/controllers/auth_controller.py)
@@ -343,7 +357,7 @@ Functionalities of SQLAlchemy ORM in the ACNH API
 	
 	e.g. exerpt from [island_controller.py](/src/controllers/island_controller.py);
 	```
-	    # if island exists
+	# if island exists
     if island:
         user_id = get_jwt_identity()
         # check if the user is the owner of the island
@@ -355,7 +369,7 @@ Functionalities of SQLAlchemy ORM in the ACNH API
 
 	exerpt from [island_villagers_controller.py](/src/controllers/island_villagers_controller.py);
 	```
-	    # If island villager requested exists
+	# If island villager requested exists
     if island_villager:
         # Check if the user is the owner of the island villager list
         if str(island_villager.island.user_id) != user_id:
@@ -365,7 +379,7 @@ Functionalities of SQLAlchemy ORM in the ACNH API
 
 	exerpt from [wanted_villagers_controller.py](/src/controllers/wanted_villagers_controller.py);
 	```
-	        # If the user is an admin or the owner of the island
+	    # If the user is an admin or the owner of the island
         if user.is_admin or str(wanted_villager.island.user_id) == user_id:
             # return the wanted villager data
             return wanted_villager_schema.dump(wanted_villager)
