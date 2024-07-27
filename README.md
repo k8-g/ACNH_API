@@ -16,9 +16,7 @@ This API app consisists of several tables in the database; user, island, village
 A user once registered and logged in, can create an island and add to their island villager list or wanted villager list for that specific island.
 A logged in user can also add a comment about their island villager, or add multiple notes to their wanted villagers.
 
-With over 500 villagers that one can collect on their island, I wanted to make an app where it makes it easy for a user to look up a villager's data, that they then can use the id number to add to their island villager's list or wanted villager's list. Example: http://localhost:8081/villagers?name=Gwen
-
-![Looking up Gwen](/docs/Screenshots/Looking%20up%20Gwen.png)
+With over 500 villagers that one can collect on their island, I wanted to make an app where it makes it easy for a user to look up a villager's data, that they then can use the id number or name to add to their island villager's list or wanted villager's list.
 
 ## R2. Describe the way tasks are allocated and tracked in your project.
 
@@ -321,7 +319,7 @@ In having User & Island as one table, I realised that it was too confusing to me
 
 This should focus on the database implementation AFTER coding has begun, eg. during the project development phase.
 
-The final ERD was done after I realised that the original and other draft ERD's (stored in the docs/Draft ERDS folder) were too complicated and I was struggling to work with a combined user/island table and made the decision to have a separate user table and separate island table, as it made more sense to me that way.
+The final ERD was done after I realised that the original and other draft ERD's (stored in the [docs/Draft ERDS folder](/docs/Draft%20ERDs/)) were too complicated and I was struggling to work with a combined user/island table and made the decision to have a separate user table and separate island table, as it made more sense to me that way.
 
 I also ended up removing the comments table as it was better to have a seperate notes section for Wanted Villagers to allow multiple notes on a Wanted Villager, with Island Villagers having a single text field, to allow for a comment if needed, but Wanted Villagers is the main section I wanted Notes, as there, a user can add multiple notes keeping track of invite requirements or just simply write why they wanted the villager or what they like about that villager.
 
@@ -1287,6 +1285,10 @@ Response:
     - Route: http://localhost:8081/villagers?name=Judy
 
 ![Insomnia test: GET /villagers?name=Judy](/docs/Screenshots/11.%20GET%20:villagers%20judy.png)
+
+	- Route: http://localhost:8081/villagers?name=Gwen
+
+![Looking up Gwen](/docs/Screenshots/Looking%20up%20Gwen.png)
 
 Fail - Villager ID doesn't exist
 
