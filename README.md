@@ -589,6 +589,42 @@ Final ERD as below:
 
 ### API Endpoints:
 
+- Authenication
+	- Register user
+	- Log in user 
+	- Delete user (Admin only)
+
+- Island
+	- Create Island
+	- Read/Get Islands
+	- Update Island
+	- Delete Island
+
+- Villagers
+	- Create Villager (Admin only)
+	- Read/Get Villagers
+	- Update Villagers (Admin) only
+	- Delete Villagers (Admin only)
+
+- Island Villagers
+	- Create Island Villager (User JWT required)
+	- Read/Get Island Villager (User JWT required, Admin can see all)
+	- Update Island Villager (User JWT required)
+	- Delete Island Villger (User JWT required)
+
+- Wanted Villagers
+	- Create Wanted Villagers (User JWT required)
+	- Read/Get Wanted Villagers (User JWT required)
+	- Update Wanted Villagers (User JWT required)
+	- Delete Wanted Villagers (User JWT required)
+
+- Notes
+	- Create Note (User JWT required)
+	- No Note Read/Get Endpoint
+		- (User can read Notes when viewing Wanted Villager)
+	- Update Note (User JWT required)
+	- Delete Note (User JWT required)
+
 #### Authentication Routes
 
 **Registering new user**
@@ -730,7 +766,7 @@ Response:
 ![Insomnia test: Delete User](/docs/Screenshots/DELETE%20user%20not%20admin.png)
 
 
-#### Island Routes (CRUD)
+#### Island Routes
 **Creating an Island**
 
 Logged in as New User Sami
