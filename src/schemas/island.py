@@ -20,6 +20,3 @@ class IslandSchema(ma.Schema):
 island_schema = IslandSchema()
 islands_schema = IslandSchema(many=True)
 
-    # notes = fields.List(fields.Nested('NoteSchema', exclude=["owner"]))
-    # comments = fields.List(fields.Nested('CommentSchema', exclude=["island"]))
-

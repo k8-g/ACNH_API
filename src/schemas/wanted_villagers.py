@@ -10,15 +10,9 @@ class WantedVillagerSchema(ma.Schema):
 
     class Meta:
         fields = ("island", "villager", "id", "notes")
-        # fields = ("id", "island", "villager", "notes")
         ordered = True
 
 
 wanted_villager_schema = WantedVillagerSchema()
 wanted_villagers_schema = WantedVillagerSchema(many=True)
 
-
-    # villager = fields.Nested('VillagerSchema')
-    # island = fields.Nested('IslandSchema', exclude=('island_villagers', 'wanted'))
-    # notes = fields.List(fields.Nested('NotesSchema'))
-    # comments = fields.List(fields.Nested('CommentsSchema'))
