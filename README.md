@@ -19,12 +19,52 @@ A Trello board was extensively used throughout the entire duration of the projec
 
 (Hopefully one of these links should link to the public board, otherwise screenshots can be found at INSERT SCREENSHOT LINK)
 
-[Trello link](https://trello.com/invite/b/668e2e1b9b47a60e3686eeec/ATTI69ed715bb9450d852e0530ea65e0b8967121DED2/✿◡◡-kates-t2a2-api-webserver)
+[Trello link](https://trello.com/b/s8ynY9wW)
+
+[Trello invite link](https://trello.com/invite/b/668e2e1b9b47a60e3686eeec/ATTI69ed715bb9450d852e0530ea65e0b8967121DED2/✿◡◡-kates-t2a2-api-webserver)
+
+### Trello Screenshots
+Trello board
+![Trello board](/docs/Trello%20Screenshots/Trello%20board.png)
+Rough ERD
+![Draw rough ERD](/docs/Trello%20Screenshots/Draw%20rough%20ERD.png)
+Submit Rough ERD
+![Submit Rough ERD](/docs/Trello%20Screenshots/Submit%20rough%20ERD.png)
+Updated ERD
+![Updated ERD](/docs/Trello%20Screenshots/Updated%20ERD.png)
+Feature/Authenication
+![Feature/Authenication](/docs/Trello%20Screenshots/Feature:authenication.png)
+Models
+![Models](/docs/Trello%20Screenshots/Models.png)
+Schemas
+![Schemas](/docs/Trello%20Screenshots/Schemas.png)
+Feature/Controllers
+![Feature/Controllers](/docs/Trello%20Screenshots/Feature:controllers.png)
+Feature/Islands
+![Feature/Islands](/docs/Trello%20Screenshots/Feature:islands.png)
+Feature/Villagers
+![Feature/Villagers](/docs/Trello%20Screenshots/Feature:villagers.png)
+Feature/WantedVillagers
+![Feature/WantedVillagers](/docs/Trello%20Screenshots/Feature:wanted%20villagers.png)
+Feature/Notes
+![Feature/Notes](/docs/Trello%20Screenshots/Feature:notes.png)
+![Feature/Validation](/docs/Trello%20Screenshots/Feature:validation.png)
+Feature/Validation
+![Feature/Authorisation](/docs/Trello%20Screenshots/Feature:authorisation.png)
+Feature/Authorisation
+![Models/islands](/docs/Trello%20Screenshots/Models:islands.png)
+Models/villagers
+![Models/villagers](/docs/Trello%20Screenshots/Models:villagers.png)
+Models/island_villagers
+![Models/island_villagers](/docs/Trello%20Screenshots/Models:island_villagers.png)
+Models/wanted_villagers
+![Models/wanted_villagers](/docs/Trello%20Screenshots/Feature:wanted%20villagers.png)
+Models/notes
+![Models/notes](/docs/Trello%20Screenshots/Models:note.png)
+Models/user
+![Models/user](/docs/Trello%20Screenshots/Models:user.png)
 
 
-[Trello link 2](https://trello.com/b/s8ynY9wW)
-
-SCREENSHOTS TO BE ADDED
 
 
 ## R3. List and explain the third-party services, packages and dependencies used in this app.
