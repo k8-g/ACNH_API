@@ -17,7 +17,7 @@ This API app consisists of several tables in the database; user, island, village
 
 A Trello board was extensively used throughout the entire duration of the project.
 
-(Hopefully one of these links should link to the public board, otherwise screenshots can be found at INSERT SCREENSHOT LINK)
+(Hopefully one of these links should link to the public board, otherwise screenshots can be found below)
 
 [Trello link](https://trello.com/b/s8ynY9wW)
 
@@ -268,29 +268,35 @@ Functionalities of SQLAlchemy ORM in the ACNH API
 ## R6. Design an entity relationship diagram (ERD) for this app’s database, and explain how the relations between the diagrammed models will aid the database design. 
 This should focus on the database design BEFORE coding has begun, eg. during the project planning or design phase.
 
-![Original ERD](/docs/Draft%20ERDS/Draft1.ACNH_Villager_Collection_API_ERD.png)
+![Original ERD](/docs/Draft%20ERDS/Draft1.ACNH_Villager_Collection_API_ERD11.png)
 
-The ERD designed at the start of this project had six sections;
-- Island
+The ERD above, designed at the start of this project, had six sections;
+- IslandUser
 - Villagers
 - IslandVillagers
 - Comments
 - WantedVillagers
 - Notes
 
-- IslandVillagers linked to Island (Many to One)
+Relationships:
+- IslandVillagers linked to IslandUser (Many to One)
 - IslandVillagers linked to Villagers (Many to One)
 - Comments linked to IslandVillagers (Many to One)
 - Comments linked to WantedVillagers (Many to One)
 - Villagers link to WantedVillagers (One to Many)
-- WantedVillagers linked to Island (Many to One)
+- WantedVillagers linked to IslandUser (Many to One)
 - WantedVillagers linked to Villlagers (Many to One)
 - WantedVillagers linked to Notes (One to Many)
 
+
 - Each User can have one or more Islands (One to Many)
-- Each Island can have one or more/many IslandVillagers and WantedVillagers (One to Many)
+- Each IslandUser can have one or more/many IslandVillagers and WantedVillagers (One to Many)
 - Each IslandVillager can have multiple comments (One to Many)
 - Each WantedVillager can have multiple notes (One to Many)
+
+I wanted this original design to have User/Island to be able to have multiple villagers saved in their island villager list and their wanted villager list. Each island villager could then have multiple comments, and each wanted villager could have multiple notes, so having them separate was my of keeping track of which section was which.
+
+In having User & Island as one table, I realised that it was too confusing to me as in my mind, as one user can have one or more islands, and having User and Island as one table was too confusing for me and wasn't working for me, so I decided to change it to be updated ERD as mentioned in Q7, having separate tables for Island and User, and had to rework the entire code to add this new structure in.
 
 
 ## R7. Explain the implemented models and their relationships, including how the relationships aid the database implementation.
@@ -299,7 +305,7 @@ This should focus on the database implementation AFTER coding has begun, eg. dur
 
 The final ERD was done after I realised that the original and other draft ERD's (stored in the docs/Draft ERDS folder) were too complicated and I was struggling to work with a combined user/island table and made the decision to have a separate user table and separate island table, as it made more sense to me that way.
 
-I also ended up removing the comments table as it was better to have a seperate notes section for Wanted Villagers to allow multiple notes on a Wanted Villager with Island Villagers having a single text field to allow for a comment if needed, but Wanted Villagers is the main section I wanted Notes.
+I also ended up removing the comments table as it was better to have a seperate notes section for Wanted Villagers to allow multiple notes on a Wanted Villager with Island Villagers having a single text field to allow for a comment if needed, but Wanted Villagers is the main section I wanted Notes, as there a user can add multiple notes keeping track of invite requirements or just simply write why they wanted the villager of what they like about that villager.
 
 Final ERD as below:
 ![Final ERD](/docs/ACNH_API_ERD.png)
@@ -322,7 +328,7 @@ Final ERD as below:
     - `user_id` (FK): The id from the user table to link an island to its user.
 
 - Relationships:
-    - Island links back to the User table to access user data
+    - Island links back to the User table to access user data for authorisation purposes
     ```
     user = db.relationship('User', backref='islands')
     ```
@@ -338,7 +344,7 @@ Final ERD as below:
     - `catchphrase`: Catchphrase of the villager.
     - `hobbies`: Hobbies of the villager.
 
-- Villager data is a pre-filled data table purely for other tables to access it's data, (READ-ONLY/GET), unless one has admin permission.
+- Villager data is a pre-filled data table purely for other tables to access its data, (READ-ONLY/GET), unless one has admin permission.
 - Only an admin can Create (POST), Update (PATCH) or Delete (DELETE) a villager's data
 
 
