@@ -12,9 +12,5 @@ class Island(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     # Relationships
-    # user = db.relationship('User', back_populates='islands')
-    # Island links back to User table
     user = db.relationship('User', backref='islands')
     
-    # Each Island can have multiple IslandVillagers
-    # Each Island can have mutliple WantedVillagers
