@@ -33,12 +33,13 @@ def get_wanted_villagers():
     # Check if the user is an admin
     stmt = db.select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
-
+    # If the user is an admin
     if user.is_admin:
-        # If the user is an admin, fetch all wanted villagers
+        # fetch all wanted villagers
         stmt = db.select(WantedVillagers).order_by(WantedVillagers.id.asc())
+    # else if the user is not an admin
     else:
-        # If the user is not an admin, fetch only their wanted villagers
+        # fetch only their wanted villagers
         stmt = db.select(WantedVillagers).join(Island).filter(Island.user_id == user_id).order_by(WantedVillagers.id.asc())
     
     wanted_villagers = db.session.scalars(stmt)
