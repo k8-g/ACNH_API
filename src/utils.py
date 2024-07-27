@@ -1,9 +1,13 @@
-import functools
+import functools 
+# from functools import wraps
 
 from flask_jwt_extended import get_jwt_identity
 
 from init import db
 from models.user import User
+# from models.island import Island
+
+
 
 
 def authorise_as_admin():
@@ -33,3 +37,18 @@ def auth_as_admin_decorator(fn):
             return {"error": "Only admin can perform this action"}, 403
 
     return wrapper
+
+
+# def check_if_owner(fn):
+#     @wraps(fn)
+#     def wrapper(*args, **kwargs):
+#         user_id = get_jwt_identity()
+#         island_id = kwargs.get('island_id')
+#         stmt = db.select(Island).filter_by(id=island_id)
+#         island = db.session.scalar(stmt)
+#         if not island:
+#             return {"error": f"Island with id {island_id} not found"}, 404
+#         if str(island.user_id) != user_id:
+#             return {"error": "You are not the owner of this island."}, 403
+#         return fn(*args, **kwargs)
+#     return wrapper
