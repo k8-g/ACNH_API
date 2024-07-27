@@ -14,8 +14,11 @@ This Flask app API will be so that one can keep track of the current villagers t
 This API app consisists of several tables in the database; user, island, villagers, island villagers, wanted villagers and notes.
 
 A user once registered and logged in, can create an island and add to their island villager list or wanted villager list for that specific island.
-A logged in user can also add a comment to their island villager, or add multiple notes to their wanted villagers.
+A logged in user can also add a comment about their island villager, or add multiple notes to their wanted villagers.
 
+With over 500 villagers that one can collect on their island, I wanted to make an app where it makes it easy for a user to look up a villager's data, that they then can use the id number to add to their island villager's list or wanted villager's list. Example: http://localhost:8081/villagers?name=Gwen
+
+![Looking up Gwen](/docs/Screenshots/Looking%20up%20Gwen.png)
 
 ## R2. Describe the way tasks are allocated and tracked in your project.
 
