@@ -30,11 +30,12 @@ def get_all_islands():
 # /islands/<id> - GET - fetch a single island - R
 @island_bp.route("/<int:island_id>", methods=['GET'])
 def get_one_island(island_id):
-    # first id is the db id, second is the id above
+    # get the island from the database
     stmt = db.select(Island).filter_by(id=island_id)
     island = db.session.scalar(stmt)
     # if island exists
     if island:
+        # return island data
         return island_schema.dump(island)
     else:
         # return error message

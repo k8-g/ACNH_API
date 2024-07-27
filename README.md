@@ -558,6 +558,42 @@ Response:
 ![Insomnia test: POST Login User](/docs/Screenshots/2.%20GET%20auth:login%20fail.png)
 
 
+**Deleting user**
+- HTTP verb: DELETE
+- Route: http://localhost:8081/auth/users/5
+- Any required body (json) or header data (auth/jwt):
+    - Auth Bearer Token/JWT required - Admin
+    
+JSON Body:
+```
+-
+```
+Response:
+```
+{
+	"message": "User with id 5 deleted"
+}
+```
+
+- Only ad admin can delete a user
+
+![Insomnia test: DELETE User](/docs/Screenshots/DELETE%20user.png)
+
+Fail: If a non-admin user tries to delete
+JSON Body:
+```
+-
+```
+Response:
+```
+{
+	"error": "Only an admin can perform this action"
+}
+```
+![Insomnia test: Delete User](/docs/Screenshots/DELETE%20user%20not%20admin.png)
+
+
+
 **Creating an Island**
 
 Logged in as New User Sami
