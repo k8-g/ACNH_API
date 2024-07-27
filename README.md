@@ -252,6 +252,8 @@ Features of SQLAlchemy
 
 - Object-Relational Mapping (ORM):
     - SQLAlchemy provides an ORM that allows developers to map Python classes to database tables. This makes it easy to interact with the database using Python objects and methods instead of raw SQL queries.
+- CRUD Operations:
+	- With SQLAlchemy, you can easily perform Create, Read, Update, and Delete (CRUD) operations on your models.
 - Declarative Syntax:
     - Using SQLAlchemy’s declarative syntax, you can define database schema by creating Python classes that represent tables. Each class attribute represents a column in the table.
 - Query Building:
@@ -445,6 +447,14 @@ Functionalities of SQLAlchemy ORM in the ACNH API
 			# return error saying user does not exist
 			return {"error": f"User with id {user_id} not found"}, 404
 	```
+- password hashing via Flask Bcrypt
+
+e.g.
+	```
+	if password:
+	user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+	```
+- seeding via [cli_controller.py](/src/controllers/cli_controller.py)
 
 
 
