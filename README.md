@@ -336,17 +336,51 @@ Final ERD as below:
     - `password`: for allowing a particular user to access their data
     - `is_admin`: so that the API knows whether a user is an admin or not
 
+
+	```
+	class User(db.Model):
+		# name of the table
+		__tablename__ = "users"
+
+		# attributes of the table
+		id = db.Column(db.Integer, primary_key=True) # Primary key
+		name = db.Column(db.String, nullable=False)
+		email = db.Column(db.String, nullable=False, unique=True)
+		password = db.Column(db.String, nullable=False)
+		is_admin = db.Column(db.Boolean, default=False)
+	```	
+---
+
 - Island: This table represents different islands each user can keep track of. A user can have one or more islands, if they wish. A user may access, update or delete their own island.
 
     - `id` (PK): Unique identifier for each island.
     - `island_name`: Name of the island.
     - `user_id` (FK): The id from the user table to link an island to its user.
 
+	```
+	class Island(db.Model):
+		# name of the table
+		__tablename__ = "island"
+
+		# attributes of the table
+		id = db.Column(db.Integer, primary_key=True) 
+		island_name = db.Column(db.String, nullable=False)
+
+		# Foreign key to link back to User table
+		user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+		# Relationships
+		user = db.relationship('User', backref='islands')
+	```
+
+
 - Relationships:
     - Island links back to the User table to access user data for authorisation purposes
     ```
     user = db.relationship('User', backref='islands')
     ```
+
+---
 
 - Villager: This table holds the villager data. This data is only allowed to be updated or deleted by an admin.
 
@@ -362,6 +396,24 @@ Final ERD as below:
 - Villager data is a pre-filled data table purely for other tables to access its data, (READ-ONLY/GET), unless one has admin permission.
 - Only an admin can Create (POST), Update (PATCH) or Delete (DELETE) a villager's data
 
+	```
+	class Villager(db.Model):
+		# name of table
+		__tablename__ = "villager"
+
+		# arributes of the table
+		id = db.Column(db.BigInteger, primary_key=True)
+		name = db.Column(db.String, nullable=False)
+		gender = db.Column(db.String, nullable=False)
+		species = db.Column(db.String, nullable=False)
+		personality = db.Column(db.String, nullable=False)
+		birthday = db.Column(db.String, nullable=False)
+		catchphrase = db.Column(db.String, nullable=False)
+		hobbies = db.Column(db.String, nullable=False)
+	```
+
+---
+
 
 - IslandVillager: This table is where a user may add a villager's data to a list to keep track of which villagers they currently have on their island.
 
@@ -369,6 +421,26 @@ Final ERD as below:
     - `island_id` (FK): Foreign key linking to the Island table.
     - `villager_id` (FK): Foreign key linking to the Villager table.
     - `text`: Allows a user to make a comment about said villager if they wish.
+
+	```
+	class IslandVillager(db.Model):
+		# name of the table
+		__tablename__ = "island_villager"
+
+		# Attributes of the table
+		id = db.Column(db.Integer, primary_key=True)
+		text = db.Column(db.String, nullable=True)
+
+		# Foreign keys
+		island_id = db.Column(db.Integer, db.ForeignKey("island.id"), nullable=False)
+		villager_id = db.Column(db.Integer, db.ForeignKey("villager.id"), nullable=False)
+		
+		# Relationships
+		# IslandVillagers links back to Island table
+		island = db.relationship('Island')
+		# IslandVillagers links back to Villager table
+		villager = db.relationship('Villager')
+	```
 
 - Relationships:
     - IslandVillagers links back to Island table
@@ -380,11 +452,37 @@ Final ERD as below:
     villager = db.relationship('Villager')
     ```
 
+---
+
+
 - WantedVillagers: This table represents the villagers that are wanted to be colleted on an island. A user can keep track of a list of villagers they want for their island.
 
     - `id` (PK): Unique identifier for each villager wanted.
     - `Villager_id` (FK): Foreign key linking to the Villagers table.
     - `island_id` (FK): Foreign key linking to the Island table.
+
+	```
+	class WantedVillagers(db.Model):
+		# table name
+		__tablename__ = "wanted_villagers"
+
+		# attributes of the table
+		id = db.Column(db.Integer, primary_key=True)
+
+		# Foreign keys
+		island_id = db.Column(db.Integer, db.ForeignKey('island.id'), nullable=False)
+		villager_id = db.Column(db.Integer, db.ForeignKey('villager.id'), nullable=False)
+		
+
+		# Relationships
+		# WantedVillagers links back to Island
+		island = db.relationship('Island', backref='wanted_villagers')
+		# WantedVillagers links back to Villager
+		villager = db.relationship('Villager', backref='wanted_villagers')
+		# WantedVillager links back to Note
+		notes = db.relationship('Note', back_populates='wanted_villager')
+	```
+
 
 - Relationships:
    - WantedVillagers links back to Island
@@ -400,11 +498,32 @@ Final ERD as below:
     notes = db.relationship('Note', back_populates='wanted_villager')
     ```
 
+---
+
+
 - Notes: This table contains any notes a user might write about their Wanted Villagers. Here they can write what they might need to  invite a villager, what they like about them, etc.
 
     - `id` (PK): Unique identifier for each note.
     - `wanted_id` (FK): Foreign key linking to the WantedVillagers
     - `notes`: The note text.
+
+	```
+
+	class Note(db.Model):
+		# name of table
+		__tablename__ = "notes"
+
+		# Attributes of table
+		id = db.Column(db.Integer, primary_key=True)
+		notes = db.Column(db.String, nullable=True)
+		# Foreign keys
+		wanted_villagers_id = db.Column(db.Integer, db.ForeignKey('wanted_villagers.id'), nullable=False)
+
+
+		# Relationship
+		# Notes links back to WantedVillagers
+		wanted_villager = db.relationship('WantedVillagers', back_populates='notes')
+	```
 
 -  Relationships:
     - Notes links back to WantedVillagers
@@ -412,6 +531,7 @@ Final ERD as below:
     wanted_villager = db.relationship('WantedVillagers', back_populates='notes')
     ```
 
+---
 **Relationships and Their Significance**
 
 - User
@@ -468,6 +588,8 @@ Final ERD as below:
 - Response
 
 ### API Endpoints:
+
+#### Authentication Routes
 
 **Registering new user**
 
@@ -608,7 +730,7 @@ Response:
 ![Insomnia test: Delete User](/docs/Screenshots/DELETE%20user%20not%20admin.png)
 
 
-
+### Island Routes (CRUD)
 **Creating an Island**
 
 Logged in as New User Sami
@@ -807,6 +929,7 @@ Response:
 ```
 ![Insomnia test: DELETE /islands/3](/docs/Screenshots/7.%20DELETE%20island%20fail.png)
 
+#### Villager Routes
 
 **GET all villagers**
 - HTTP verb: GET 
@@ -1068,7 +1191,7 @@ Response:
 ![Insomnia test: DELETE /villagers/1](/docs/Screenshots/DELETE%20villagers%20admin.png)
 
 
-
+### Island Villagers Routes
 **GET Island Villagers**
 Logged in as User Kate
 - HTTP verb: GET 
@@ -1607,6 +1730,8 @@ Response:
 
 ![Insomnia test: DELETE /island_villagers/7](/docs/Screenshots/21.%20DELETE%20island%20villager%20doesn't%20exist.png)
 
+
+#### Wanted Villager Routes
 **GET All Wanted Villagers**
 
 Logged in as User Kate
@@ -1993,6 +2118,8 @@ Response:
 ```
 ![Insomnia test: DELETE /wanted_villagers/4](/docs/Screenshots/30.%20DELETE%20wanted%20villager%20not%20yours.png)
 
+
+#### Notes Routes
 **Create note about Wanted Villager**
 
 Logged in as User Kate
