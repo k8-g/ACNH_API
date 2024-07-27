@@ -1,4 +1,5 @@
 # Kate Gerber's Animal Crossing Database API
+Assignment T2A2 - API Webserver
 
 [Github Link](https://github.com/k8-g/ACNH_API)
 
@@ -12,12 +13,15 @@ This Flask app API will be so that one can keep track of the current villagers t
 
 This API app consisists of several tables in the database; user, island, villagers, island villagers, wanted villagers and notes.
 
+A user once registered and logged in, can create an island and add to their island villager list or wanted villager list for that specific island.
+A logged in user can also add a comment to their island villager, or add multiple notes to their wanted villagers.
+
 
 ## R2. Describe the way tasks are allocated and tracked in your project.
 
 A Trello board was extensively used throughout the entire duration of the project.
 
-(Hopefully one of these links should link to the public board, otherwise screenshots can be found below)
+(Hopefully one of these links should link to the public board, otherwise a selection of screenshots can be found below)
 
 [Trello link](https://trello.com/b/s8ynY9wW)
 
@@ -120,32 +124,42 @@ Add email lowercase code
 - flask_bcrypt
     - bcrypt==4.1.3
 	- Flask-Bcrypt==1.0.1
-        - A library for hashing passwords. It’s used to enhance security by storing hashed passwords instead of plaintext.
+        - A library that provides a way to hash passwords using the bcrypt algorithm. It’s used to enhance security by storing hashed passwords instead of plaintext. 
+		- Hashed password can be stored in your database. Hashing passwords ensures that even if your database is compromised, the plain-text passwords are not exposed.
 
 - psycopg2-binary
     - psycopg2-binary==2.9.9
-        - A PostgreSQL adapter for Python. It’s used to connect and interact with PostgreSQL databases.
+		- A popular PostgreSQL adapter for the Python programming language. It allows Python applications to connect to and interact with PostgreSQL databases.
+		- This connection lets you run SQL queries, fetch data, and manipulate the database from your Python code.
 
 - flask_sqlalchemy
     - Flask-SQLAlchemy==3.1.1
     - SQLAlchemy==2.0.31
         - An extension that simplifies the use of SQLAlchemy, the Python SQL toolkit, with Flask. It provides ORM (Object Relational Mapping) support for working with databases.
+		- Allows defining database models as Python classes and interacting with the database using Python objects.
 
 - flask_marshmallow
     - flask-marshmallow==1.2.1
         - Integrates the Flask web framework with the Marshmallow object serialization/deserialization library. This is used for data validation and formatting.
+		- It helps convert complex data types, such as objects, into native Python data types (serialization) and vice versa (deserialization). 
+		- This is particularly useful for converting database objects to JSON and transforming JSON data into Python objects.
 
 - marshmallow_sqlalchemy
     - marshmallow-sqlalchemy==1.0.0
         - An integration library that connects Marshmallow with SQLAlchemy. It helps in serializing and deserializing SQLAlchemy models.
+		- It helps convert SQLAlchemy models to and from Python data structures easily. 
+		- This makes it simple to transform database objects into JSON and vice versa.
 
 - flask_jwt_extended
     - Flask-JWT-Extended==4.6.0
         - An extension for Flask that adds support for creating JSON Web Tokens (JWT). JWT is used for securely transmitting information between parties as a JSON object.
+		- It allows for secure user authentication by generating, verifying, and managing JWT tokens. 
+		- This extension makes it easy to add user authentication and authorization to your Flask applications.
 
 - python-dotenv
     - python-dotenv==1.0.1
-        - A library that loads environment variables from a .env file into the environment. This helps manage configuration.
+        - a Python library that loads environment variables from a .env file into the environment. 
+		- This allows you to manage configuration settings separately from your code, making it easier to handle different environments (development, testing, production).
 
 
 **General Flask Libraries**
@@ -297,7 +311,7 @@ Relationships:
 
 I wanted this original design to have User/Island to be able to have multiple villagers saved in their island villager list and their wanted villager list. Each island villager could then have multiple comments, and each wanted villager could have multiple notes, so having them separate was my of keeping track of which section was which.
 
-In having User & Island as one table, I realised that it was too confusing to me as in my mind, as one user can have one or more islands, and having User and Island as one table was too confusing for me and wasn't working for me, so I decided to change it to be updated ERD as mentioned in Q7, having separate tables for Island and User, and had to rework the entire code to add this new structure in.
+In having User & Island as one table, I realised that it was too confusing to me as in my mind, as one user can have one or more islands, and having User and Island as one table was too confusing for me and wasn't working for me, so I decided to change it to be updated ERD as mentioned in Q7, having separate tables for Island and User, and had to rework the entire code to add this new, more efficient, structure in.
 
 
 ## R7. Explain the implemented models and their relationships, including how the relationships aid the database implementation.
@@ -306,7 +320,7 @@ This should focus on the database implementation AFTER coding has begun, eg. dur
 
 The final ERD was done after I realised that the original and other draft ERD's (stored in the docs/Draft ERDS folder) were too complicated and I was struggling to work with a combined user/island table and made the decision to have a separate user table and separate island table, as it made more sense to me that way.
 
-I also ended up removing the comments table as it was better to have a seperate notes section for Wanted Villagers to allow multiple notes on a Wanted Villager with Island Villagers having a single text field to allow for a comment if needed, but Wanted Villagers is the main section I wanted Notes, as there a user can add multiple notes keeping track of invite requirements or just simply write why they wanted the villager of what they like about that villager.
+I also ended up removing the comments table as it was better to have a seperate notes section for Wanted Villagers to allow multiple notes on a Wanted Villager, with Island Villagers having a single text field, to allow for a comment if needed, but Wanted Villagers is the main section I wanted Notes, as there, a user can add multiple notes keeping track of invite requirements or just simply write why they wanted the villager or what they like about that villager.
 
 Final ERD as below:
 ![Final ERD](/docs/ACNH_API_ERD.png)
