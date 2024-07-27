@@ -2,21 +2,20 @@
 
 [Github Link](https://github.com/k8-g/ACNH_API)
 
+[Installation Doc](/installation%20doc.md)
+
 ## R1. Explain the problem that this app will solve, and explain how this app solves or addresses the problem
 
-CMP1001-6.2: JUSTIFIES the purpose and goal of the developed application.
+So the goal of this app is, I want to allow someone to keep track of their villagers on their island for the Switch game, Animal Crossing: New Horizon (ACNH). 
 
-So the "problem" is, I want to allow someone to keep track of their villagers on their island for the Switch game, Animal Crossing: New Horizon (ACNH). 
+This Flask app API will be so that one can keep track of the current villagers they have on their Animal Crossing island and also keep track of the villagers they want to collect, with the option to add comments and notes on both current and wishlisted villagers. A user can also read some data about different villagers available.
 
-This Flask app API will be so that one can keep track of the current villagers they have on their Animal Crossing island and also keep track of the villagers they want to collect, with the option to add comments and notes on both current and wishlisted villagers.
-
-The API app consisists of several tables in the database; user, island, villagers, island villagers, wanted villagers and notes.
-
+This API app consisists of several tables in the database; user, island, villagers, island villagers, wanted villagers and notes.
 
 
 ## R2. Describe the way tasks are allocated and tracked in your project.
 
-A Trello board was extensively used throughout the entire duration of the project
+A Trello board was extensively used throughout the entire duration of the project.
 
 (Hopefully one of these links should link to the public board, otherwise screenshots can be found at INSERT SCREENSHOT LINK)
 
@@ -27,7 +26,6 @@ A Trello board was extensively used throughout the entire duration of the projec
 
 SCREENSHOTS TO BE ADDED
 
-CMP1001-2.3: DESCRIBES the way tasks are planned and tracked in the project.
 
 ## R3. List and explain the third-party services, packages and dependencies used in this app.
 
@@ -117,17 +115,37 @@ CMP1001-2.3: DESCRIBES the way tasks are planned and tracked in the project.
 
 ## R4. Explain the benefits and drawbacks of this app’s underlying database system.
 
-CMP1001-2.4: IDENTIFY AND DESCRIBE the benefits and drawbacks of a chosen database system.
+Benefits of PostgreSQL
 
-Postgres
+- Reliability:
+    - PostgreSQL ensures your data is safe and consistent, even if something goes wrong during a transaction.
+- Versatile Data Handling:
+    - It can store and manage various types of data, including JSON, arrays, and more complex structures.
+- Search Capabilities:
+    - PostgreSQL can efficiently search through large amounts of text data, which is useful for finding specific information quickly.
+- Customizable:
+    - You can add custom functions and types, making it flexible to suit your specific needs.
+- Strong Support:
+    - There’s a large community and plenty of resources available for help and guidance.
+- Security:
+    - It offers robust security features to protect your data from unauthorized access.
+- Scalable:
+    - PostgreSQL can handle large volumes of data and many users, making it suitable for growing applications.
+
+Drawbacks of PostgreSQL
+
+- Complexity:
+    - It can be complicated to set up and manage, requiring more knowledge and expertise.
+- Performance Tuning:
+    - To get the best performance, you might need to spend time optimizing settings and queries.
+- Resource Usage:
+    - PostgreSQL can use a lot of memory and storage, which might be a problem for smaller setups.
+- Configuration Overhead:
+    - There are many settings to configure, which can be overwhelming and, if done incorrectly, can cause issues.
+- Migration Challenges:
+    -Moving data to or from PostgreSQL can be difficult, especially if you’re switching from a very different database system.
 
 ## R5. Explain the features, purpose and functionalities of the object-relational mapping system (ORM) used in this app.
-
-CMP1001-1.3: EXPLAINS the features and functionalities of an object-relational mapping (ORM) system
-
-SQLAlchemy
-- of what SQLAlchemy does and why it's needed in our application, what features it provides to our app
-- ORM as awhole
 
 Features of SQLAlchemy 
 
@@ -165,11 +183,6 @@ Functionalities of SQLAlchemy ORM in the ACNH API
 ## R6. Design an entity relationship diagram (ERD) for this app’s database, and explain how the relations between the diagrammed models will aid the database design. 
 This should focus on the database design BEFORE coding has begun, eg. during the project planning or design phase.
 
-
-PGM1003-2.1, PGM1003-7.3: EXPLAINS a plan for normalised database relations.
-
-explain the original erd and the general idea i had when i started
-
 ![Original ERD](/docs/Draft%20ERDS/Draft1.ACNH_Villager_Collection_API_ERD.png)
 
 The ERD designed at the start of this project had six sections;
@@ -199,17 +212,15 @@ The ERD designed at the start of this project had six sections;
 
 This should focus on the database implementation AFTER coding has begun, eg. during the project development phase.
 
+The final ERD was done after I realised that the original and other draft ERD's (stored in the docs/Draft ERDS folder) were too complicated and I was struggling to work with a combined user/island table and made the decision to have a separate user table and separate island table, as it made more sense to me that way.
 
-CMP1001-7.2: DESCRIBES the project’s models in terms of the relationships they have with each other.
+I also ended up removing the comments table as it was better to have a seperate notes section for Wanted Villagers to allow multiple notes on a Wanted Villager with Island Villagers having a single text field to allow for a comment if needed, but Wanted Villagers is the main section I wanted Notes.
 
--backpopulates
-- code examples of relationships
-- write why it needed to be changed
-
-
+Final ERD as below:
 ![Final ERD](/docs/ACNH_API_ERD.png)
 
 ### The entities/tables:
+(PK = Primary Key, FK = Foriegn Key)
 
 - User: This table is where information about each user is stored for authenication and authorisation purposes. A user may update or delete their own user data.
 (PK = Primary Key, FK = Foriegn Key)
@@ -283,7 +294,7 @@ CMP1001-7.2: DESCRIBES the project’s models in terms of the relationships they
     notes = db.relationship('Note', back_populates='wanted_villager')
     ```
 
-- Notes: This table contains any notes a user might write about their wanted_villagers. Here they can write what they might need to  invite a villager, what they like about them, etc.
+- Notes: This table contains any notes a user might write about their Wanted Villagers. Here they can write what they might need to  invite a villager, what they like about them, etc.
 
     - `id` (PK): Unique identifier for each note.
     - `wanted_id` (FK): Foreign key linking to the WantedVillagers
@@ -296,9 +307,10 @@ CMP1001-7.2: DESCRIBES the project’s models in terms of the relationships they
     ```
 
 **Relationships and Their Significance**
-User
-- is accessed by Island table
-- contains all the user data
+
+- User
+    - is accessed by Island table
+    - contains all the user data
 
 - Island links to User; Many-to-One
     - Each User can have one or more island
@@ -307,7 +319,7 @@ User
 
 
 - Island to IslandVillagers: One-to-Many
-    -Each island can have multiple island villagers residing on it.
+    - Each island can have multiple island villagers residing on it.
     - Each island villager in a list can only be associated to one island.
     - Connecting IslandVillagers to Islands allows for tracking which villagers belong to which island, helping in organizing and managing island-specific data.
 
@@ -380,7 +392,7 @@ Response:
  - Email converts to lowercase
 
 
-![Insomnia test: POST Register New User](/docs/Screenshots/1.auth:register.png)
+![Insomnia test: POST Register New User](/docs/Screenshots/1.%20GET%20auth:register.png)
 
 Fail: Missing required field
 
@@ -485,6 +497,7 @@ Response:
 ![Insomnia test: POST New Island](/docs/Screenshots/3.%20POST%20:islands.png)
 
 Fail: Missing data field required
+
 Response:
 ```
 {
@@ -591,8 +604,9 @@ JSON body:
 		"island_name": "Chonky Island"
 	}
 ```
+Correct user & correct island ID No.
 Response:
-- if correct user & correct island ID No.
+
 ```
 {
 	"user": {
@@ -607,7 +621,7 @@ Response:
 
 ![Insomnia test: PATCH /islands/3](/docs/Screenshots/6.%20PATCH%20:islands.png)
 
-Fail: If wrong user/jwt
+Fail: Wrong user/jwt
 
 ```
 {
