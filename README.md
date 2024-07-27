@@ -730,7 +730,7 @@ Response:
 ![Insomnia test: Delete User](/docs/Screenshots/DELETE%20user%20not%20admin.png)
 
 
-### Island Routes (CRUD)
+#### Island Routes (CRUD)
 **Creating an Island**
 
 Logged in as New User Sami
@@ -1191,7 +1191,7 @@ Response:
 ![Insomnia test: DELETE /villagers/1](/docs/Screenshots/DELETE%20villagers%20admin.png)
 
 
-### Island Villagers Routes
+#### Island Villagers Routes
 **GET Island Villagers**
 Logged in as User Kate
 - HTTP verb: GET 
