@@ -595,10 +595,10 @@ Final ERD as below:
 	- Delete user (Admin only)
 
 - [Island](#island-routes)
-	- Create Island
-	- Read/Get Islands
-	- Update Island
-	- Delete Island
+	- Create Island (User JWT required)
+	- Read/Get Islands (User JWT required)
+	- Update Island (User JWT required)
+	- Delete Island (User JWT required)
 
 - [Villagers](#villager-routes)
 	- Create Villager (Admin only)
@@ -793,6 +793,7 @@ Response:
 	"island_name": "KittyLand"
 }
 ```
+- A logged in user creates their own island(s)
 
 ![Insomnia test: POST New Island](/docs/Screenshots/3.%20POST%20:islands.png)
 
@@ -812,10 +813,67 @@ Response:
 
 
 **Get all islands**
+
 - HTTP verb: GET
 - Route: http://localhost:8081/islands
 - Any required body (json) or header data (auth/jwt):
-    - Auth Bearer Token/JWT required - No
+    - Auth Bearer Token/JWT required - User Kate
+
+JSON body:
+```
+-
+```
+Response:
+```
+[
+	{
+		"user": {
+			"name": "Kate",
+			"id": 2
+		},
+		"id": 1,
+		"island_name": "Zorlandia"
+	}
+]
+```
+
+- User can see their own islands while logged in
+	- but not others' islands
+
+![Insomnia test: GET /islands user](/docs/Screenshots/4.%20GET%20island%20kate.png)
+
+- HTTP verb: GET
+- Route: http://localhost:8081/islands
+- Any required body (json) or header data (auth/jwt):
+    - Auth Bearer Token/JWT required - User Isaboo
+
+JSON body:
+```
+-
+```
+Response:
+```
+[
+	{
+		"user": {
+			"name": "Isaboo",
+			"id": 3
+		},
+		"id": 2,
+		"island_name": "PuppyLand"
+	}
+]
+```
+
+- User can see their own islands while logged in
+	- but not others' islands
+
+![Insomnia test: GET /islands user](/docs/Screenshots/4.%20GET%20islands%20isaboo.png)
+
+- HTTP verb: GET
+- Route: http://localhost:8081/islands
+- Any required body (json) or header data (auth/jwt):
+    - Auth Bearer Token/JWT required - Admin
 
 JSON body:
 ```
@@ -839,25 +897,19 @@ Response:
 		},
 		"id": 2,
 		"island_name": "PuppyLand"
-	},
-	{
-		"user": {
-			"name": "Sami",
-			"id": 4
-		},
-		"id": 3,
-		"island_name": "KittyLand"
 	}
 ]
 ```
 
-![Insomnia test: GET /islands](/docs/Screenshots/4.%20GET%20:islands.png)
+- Admin can see all islands
+
+![Insomnia test: GET /islands](/docs/Screenshots/4.%20Get%20islands%20admin.png)
 
 **Get one island**
 - HTTP verb: GET
-- Route: http://localhost:8081/islands/3
+- Route: http://localhost:8081/islands/1
 - Any required body (json) or header data (auth/jwt):
-    - Auth Bearer Token/JWT required - No
+    - Auth Bearer Token/JWT required - User Kate
 
 JSON body:
 ```
@@ -867,30 +919,84 @@ Response:
 ```
 {
 	"user": {
-		"name": "Sami",
-		"id": 4
+		"name": "Kate",
+		"id": 2
 	},
-	"id": 3,
-	"island_name": "KittyLand"
+	"id": 1,
+	"island_name": "Zorlandia"
 }
 ```
+- Logged in user can see their own islands
 
-![Insomnia test: GET /islands/3](/docs/Screenshots/5.%20GET%20:islands:3.png)
+![Insomnia test: GET /islands/1](/docs/Screenshots/5.%20GET%20:islands:1%20-%20kate.png)
 
 - HTTP verb: GET
-- Route: http://localhost:8081/islands/4
+- Route: http://localhost:8081/islands/1
 - Any required body (json) or header data (auth/jwt):
-    - Auth Bearer Token/JWT required - No
+    - Auth Bearer Token/JWT required - User Isaboo
+
+JSON body:
+```
+-
+```
+Response:
+```
+{
+	"error": "You are not the owner of this island."
+}
+```
+- Wrong user, so can't see island data
+
+![Insomnia test: GET /islands/1](/docs/Screenshots/5.%20GET%20islands:1%20-wrong%20user.png)
+
+- HTTP verb: GET
+- Route: http://localhost:8081/islands/2
+- Any required body (json) or header data (auth/jwt):
+    - Auth Bearer Token/JWT required - User Isaboo
+
+JSON body:
+```
+-
+```
+Response:
+```
+{
+	"user": {
+		"name": "Isaboo",
+		"id": 3
+	},
+	"id": 2,
+	"island_name": "PuppyLand"
+}
+```
+- Logged in user can see their own island data
+
+
+
+![Insomnia test: GET /islands/2](/docs/Screenshots/5.%20GET%20islands:1%20-wrong%20user.png)
+
+- Admin can see all user's islands
+
+
+- HTTP verb: GET
+- Route: http://localhost:8081/islands/3
+- Any required body (json) or header data (auth/jwt):
+    - Auth Bearer Token/JWT required - Either user or Admin
 Fail: Island ID not found
 
 Response:
 ```
 {
-	"error": "Island with id 4 not found"
+	"error": "Island with id 3 not found"
 }
 ```
 
-![Insomnia test: GET /islands/4](/docs/Screenshots/5.%20GET%20islands:4%20fail.png)
+![Insomnia test: GET /islands/3](/docs/Screenshots/5.%20GET%20islands:3%20fail.png)
+
+- Probably should have added a decorator function that checks if user is owner in island_controller
+	- as three of the 4 code sections check this
+	- doing this would avoid code repetition
+	- not enough time to implement this function
 
 **Updating an Island**
 - HTTP verb: PATCH
@@ -917,7 +1023,9 @@ Response:
 	"island_name": "Chonky Island"
 }
 ```
-
+- Logged in user can update their own island
+- Code checks if user is owner of island before allowing to update
+	- if user, task executes successfully
 
 ![Insomnia test: PATCH /islands/3](/docs/Screenshots/6.%20PATCH%20:islands.png)
 
@@ -928,6 +1036,7 @@ Fail: Wrong user/jwt
 	"error": "You are not the owner of this island."
 }
 ```
+	- if not, error message comes up
 
 ![Insomnia test: PATCH /islands/3](/docs/Screenshots/6.%20PATCH%20islands%20fail.png)
 
@@ -948,6 +1057,8 @@ Response:
 	"message": "Island 'Chonky Island' deleted successfully"
 }
 ```
+- Code checks if user is owner of island before allowing to exceute deletion
+	- if user, task executes successfully
 
 ![Insomnia test: DELETE /islands/3](/docs/Screenshots/7.%20DELETE%20:islands.png)
 
@@ -964,6 +1075,10 @@ Response:
 }
 ```
 ![Insomnia test: DELETE /islands/3](/docs/Screenshots/7.%20DELETE%20island%20fail.png)
+
+- Code checks if user is owner of island before allowing to execute deletion
+	- if not, error message comes up
+
 
 #### Villager Routes
 
