@@ -22,8 +22,8 @@ GRANT ALL ON SCHEMA public TO acnh_admin;
 ```
 Create a .env file and include the variables needed from .env.sample, e.g.
 ```
-DATABASE_URL="postgresql+psycopg2://{your_user}:{password}@localhost:5432/{db_name}"
-JWT_SECRET_KEY="secret"
+DATABASE_URL=
+JWT_SECRET_KEY=
 ```
 In terminal, Install requirements:
 ```

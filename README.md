@@ -24,6 +24,7 @@ A Trello board was extensively used throughout the entire duration of the projec
 [Trello invite link](https://trello.com/invite/b/668e2e1b9b47a60e3686eeec/ATTI69ed715bb9450d852e0530ea65e0b8967121DED2/✿◡◡-kates-t2a2-api-webserver)
 
 ### Trello Screenshots
+
 Trello board
 ![Trello board](/docs/Trello%20Screenshots/Trello%20board.png)
 
@@ -575,7 +576,7 @@ Response:
 }
 ```
 
-- Only ad admin can delete a user
+- Only an admin can delete a user
 
 ![Insomnia test: DELETE User](/docs/Screenshots/DELETE%20user.png)
 
