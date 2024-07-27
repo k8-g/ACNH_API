@@ -589,7 +589,7 @@ Final ERD as below:
 
 ### API Endpoints:
 
-- [Authenication](#authentication-routes)
+- [Authentication](#authentication-routes)
 	- Register user
 	- Log in user 
 	- Delete user (Admin only)
@@ -680,10 +680,10 @@ JSON body:
 Response:
 ```
 {
-	"error": "Password is required."
+	"error": "Email is required."
 }
 ```
-- Error handling for missing password
+- Error handling for missing email
 
 ![Insomnia test: POST Register New User](/docs/Screenshots/1.%20auth:register%20no%20email.png)
 
@@ -693,17 +693,17 @@ JSON body:
 ```
 {
 	"name": "Sami",
+	"email": "Sami@kitty.com"
 
-	"password": "password123"
 }
 ```
 Response:
 ```
 {
-	"error": "Email is required."
+	"error": "Password is required."
 }
 ```
-- Error handling for missing email
+- Error handling for missing password
 
 ![Insomnia test: POST Register New User](/docs/Screenshots/1.%20auth:register%20no%20password.png)
 
