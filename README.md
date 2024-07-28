@@ -558,7 +558,7 @@ Example:
 - The Notes table contains wanted_villager_id and notes. notes is dependent on wanted__villager_id and not any other non-key attribute.
 - The Island table does not store any user details but links back to the User table via user_id.
 
-Comparision to other levels of normalisation:
+### Comparision to other levels of normalisation:
 In a denormalized database design, data redundancy is introduced to improve read performance. Here’s how the Notes model for example, could look in a less normalised form:
 
 Denormalized Notes Table Example:
