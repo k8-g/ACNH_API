@@ -462,15 +462,74 @@ e.g.
 ## R6. Design an entity relationship diagram (ERD) for this app’s database, and explain how the relations between the diagrammed models will aid the database design. 
 This should focus on the database design BEFORE coding has begun, eg. during the project planning or design phase.
 
+Original ERD submitted for approval 
 ![Original ERD](/docs/Draft%20ERDS/Draft1.ACNH_Villager_Collection_API_ERD11.png)
+	- please note that the ERD above has some errors
 
-The ERD above, designed at the start of this project, had six sections;
+The ERD above, designed at the start of this project, had six tables/entities;
+
+Legend/Notation style:
+Entities are represented as rectangles;
 - IslandUser
 - Villagers
 - IslandVillagers
 - Comments
 - WantedVillagers
 - Notes
+
+Primary Keys (PK): Indicated with "PK" before the attribute name.
+- these are underlined & bolded in the diagram to signify they are primary keys
+- e.g. each id in each entity
+
+Foreign Keys (FK): Indicated with "FK" before the attribute name
+
+Attributes: Listed within the entity rectangles.
+
+Relationships: Lines connecting to entities
+- One-to-many: represented by a single line ending with a crow's foot and circle on the many side, one side presented by a line with two small lines crossing vertically across it, like a sideways equal sign.
+
+Each entity and their attributes:
+- Island(User)
+	- **(PK)** <u>island_id</u>
+	- Name_of_island
+	- Owner_of_island
+
+- IslandVillagers
+	- **(PK)** <u>island_villagers_id</u>
+	- (FK) island_id
+	- (FK) villager_id
+	- (FK) comment_id
+
+- Comments
+	- **(PK)** <u>comments_id</u>
+	- (FK) island_villagers_id
+	- (FK) wanted_id
+	- island_comments
+
+- Villagers
+	- **(PK)** <u>villager_id</u>
+	- name
+	- species
+	- personality
+	- birthday
+	- catchphrase
+	- hobbies
+
+- VillagersWanted
+	- **(PK)** <u>wanted_id</u>
+	- (FK) villager_id
+	- (FK) island_id
+	- item_name
+	- requirement_description
+	- required_materials
+	- (FK) notes_id
+
+- Notes
+	- **(PK)** <u>notes_id</u>
+	- (FK) wanted_id
+	- (FK) villager_id
+	- notes
+
 
 Relationships:
 - IslandVillagers linked to IslandUser (Many to One)
@@ -484,28 +543,29 @@ Relationships:
 
 
 - Each User can have one or more Islands (One to Many)
+	- (I realised that the ERD I originally designed didn't allow for more than one island per user)
 - Each IslandUser can have one or more/many IslandVillagers and WantedVillagers (One to Many)
 - Each IslandVillager can have multiple comments (One to Many)
 - Each WantedVillager can have multiple notes (One to Many)
 
 I wanted this original design to have User/Island to be able to have multiple villagers saved in their island villager list and their wanted villager list. Each island villager could then have multiple comments, and each wanted villager could have multiple notes, so having them separate was my of keeping track of which section was which.
 
-In having User & Island as one table, I realised that it was too confusing to me as in my mind, as one user can have one or more islands, and having User and Island as one table was too confusing for me and wasn't working for me, so I decided to change it to be updated ERD as mentioned in Q7, having separate tables for Island and User, and had to rework the entire code to add this new, more efficient, structure in.
+In having User & Island as one table, I realised that it was too confusing to me as in my mind, as I wanted it to be so that one user can have one or more islands, and having User and Island as one table was too confusing for me and I was trying to make Island be the login and it wasn't working the way I intended, so I decided to change it to the updated ERD as mentioned in Q7, having separate tables for Island and User, and had to rework the entire code to add this new, more efficient, structure in.
 
 
 ## R7. Explain the implemented models and their relationships, including how the relationships aid the database implementation.
 
 This should focus on the database implementation AFTER coding has begun, eg. during the project development phase.
 
-The final ERD was done after I realised that the original and other draft ERD's (stored in the [docs/Draft ERDS folder](/docs/Draft%20ERDs/)) were too complicated and I was struggling to work with a combined user/island table and made the decision to have a separate user table and separate island table, as it made more sense to me that way.
+The final ERD was done after I realised that the original and other draft ERD's (stored in the [docs/Draft ERDS folder](/docs/Draft%20ERDs/)) were too complicated and I was struggling to work with a combined user/island table and made the decision to have a separate user table for logging in and separate island table for keeping track of different islands, as it made more sense to me that way.
 
-I also ended up removing the comments table as it was better to have a seperate notes section for Wanted Villagers to allow multiple notes on a Wanted Villager, with Island Villagers having a single text field, to allow for a comment if needed, but Wanted Villagers is the main section I wanted Notes, as there, a user can add multiple notes keeping track of invite requirements or just simply write why they wanted the villager or what they like about that villager.
+I also ended up removing the comments table as it was better to have a seperate notes section for Wanted Villagers to allow multiple notes on a Wanted Villager, with Island Villagers having a single text field, to allow for a comment if needed, but Wanted Villagers is the main section I wanted Notes, as there, a user can add multiple notes keeping track of invite requirements or just simply write why they wanted the villager or what they like about that villager, making the notes section versatile and customisable to whatever the user wants. 
 
 Final ERD as below:
 ![Final ERD](/docs/ACNH_API_ERD.png)
 
 ### The entities/tables:
-(PK = Primary Key, FK = Foriegn Key)
+(PK = Primary Key, FK = Foreign Key)
 
 - User: This table is where information about each user is stored for authenication and authorisation purposes. A user may update or delete their own user data.
 (PK = Primary Key, FK = Foriegn Key)
@@ -515,7 +575,7 @@ Final ERD as below:
     - `password`: for allowing a particular user to access their data
     - `is_admin`: so that the API knows whether a user is an admin or not
 
-
+As seen in [models/user.py](/src/models/user.py):
 	```
 	class User(db.Model):
 		# name of the table
@@ -536,6 +596,7 @@ Final ERD as below:
     - `island_name`: Name of the island.
     - `user_id` (FK): The id from the user table to link an island to its user.
 
+As seen in [models/island.py](/src/models/island.py):
 	```
 	class Island(db.Model):
 		# name of the table
@@ -575,6 +636,7 @@ Final ERD as below:
 - Villager data is a pre-filled data table purely for other tables to access its data, (READ-ONLY/GET), unless one has admin permission.
 - Only an admin can Create (POST), Update (PATCH) or Delete (DELETE) a villager's data
 
+As seen in [models/villager.py](/src/models/villager.py):
 	```
 	class Villager(db.Model):
 		# name of table
@@ -602,6 +664,8 @@ Final ERD as below:
     - `villager_id` (FK): Foreign key linking to the Villager table.
     - `text`: Allows a user to make a comment about said villager if they wish.
 
+
+As seen in [models/island_villager.py](/src/models/island_villager.py):
 	```
 	class IslandVillager(db.Model):
 		# name of the table
@@ -641,6 +705,7 @@ Final ERD as below:
     - `Villager_id` (FK): Foreign key linking to the Villagers table.
     - `island_id` (FK): Foreign key linking to the Island table.
 
+As seen in [models/wanted_villagers.py](/src/models/wanted_villagers.py):
 	```
 	class WantedVillagers(db.Model):
 		# table name
@@ -686,8 +751,8 @@ Final ERD as below:
     - `wanted_id` (FK): Foreign key linking to the WantedVillagers
     - `notes`: The note text.
 
+As seen in [models/note.py](/src/models/note.py):
 	```
-
 	class Note(db.Model):
 		# name of table
 		__tablename__ = "notes"
