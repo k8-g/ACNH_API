@@ -552,6 +552,21 @@ I wanted this original design to have User/Island to be able to have multiple vi
 
 In having User & Island as one table, I realised that it was too confusing to me as in my mind, as I wanted it to be so that one user can have one or more islands, and having User and Island as one table was too confusing for me and I was trying to make Island be the login and it wasn't working the way I intended, so I decided to change it to the updated ERD as mentioned in Q7, having separate tables for Island and User, and had to rework the entire code to add this new, more efficient, structure in.
 
+The ERD and database design for this API app is normalised, to reduce data redundancy, as all attributes in each table are dependent only on the primary key.
+
+Example:
+- The Notes table contains wanted_villager_id and notes. notes is dependent on wanted__villager_id and not any other non-key attribute.
+- The Island table does not store any user details but links back to the User table via user_id.
+
+Comparision to other levels of normalisation:
+In a denormalized database design, data redundancy is introduced to improve read performance. Here’s how the Notes model for example, could look in a less normalised form:
+
+Denormalized Notes Table Example:
+- Attributes: notes_id, notes, wanted_villager_name, villager_species, island_name, user_email
+- Explanation:
+	- Instead of storing only the wanted_id in the Notes table, we store additional information like the villager’s name, species, island name, and the user’s email directly in the Notes table.
+	- This design allows quicker read operations since all necessary information is available in one table, but it introduces redundancy.
+	- Changes in villager details or island details would require updating multiple tables, increasing the risk of data inconsistency.
 
 ## R7. Explain the implemented models and their relationships, including how the relationships aid the database implementation.
 
