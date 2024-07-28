@@ -591,18 +591,19 @@ Final ERD as below:
     - `is_admin`: so that the API knows whether a user is an admin or not
 
 As seen in [models/user.py](/src/models/user.py):
-	```
-	class User(db.Model):
-		# name of the table
-		__tablename__ = "users"
+```
+class User(db.Model):
+	# name of the table
+	__tablename__ = "users"
 
-		# attributes of the table
-		id = db.Column(db.Integer, primary_key=True) # Primary key
-		name = db.Column(db.String, nullable=False)
-		email = db.Column(db.String, nullable=False, unique=True)
-		password = db.Column(db.String, nullable=False)
-		is_admin = db.Column(db.Boolean, default=False)
-	```	
+	# attributes of the table
+	id = db.Column(db.Integer, primary_key=True) # Primary key
+	name = db.Column(db.String, nullable=False)
+	email = db.Column(db.String, nullable=False, unique=True)
+	password = db.Column(db.String, nullable=False)
+	is_admin = db.Column(db.Boolean, default=False)
+```
+	
 ---
 
 - Island: This table represents different islands each user can keep track of. A user can have one or more islands, if they wish. A user may access, update or delete their own island.
@@ -612,21 +613,21 @@ As seen in [models/user.py](/src/models/user.py):
     - `user_id` (FK): The id from the user table to link an island to its user.
 
 As seen in [models/island.py](/src/models/island.py):
-	```
-	class Island(db.Model):
-		# name of the table
-		__tablename__ = "island"
+```
+class Island(db.Model):
+	# name of the table
+	__tablename__ = "island"
 
-		# attributes of the table
-		id = db.Column(db.Integer, primary_key=True) 
-		island_name = db.Column(db.String, nullable=False)
+	# attributes of the table
+	id = db.Column(db.Integer, primary_key=True) 
+	island_name = db.Column(db.String, nullable=False)
 
-		# Foreign key to link back to User table
-		user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+	# Foreign key to link back to User table
+	user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-		# Relationships
-		user = db.relationship('User', backref='islands')
-	```
+	# Relationships
+	user = db.relationship('User', backref='islands')
+```
 
 
 - Relationships:
@@ -652,21 +653,21 @@ As seen in [models/island.py](/src/models/island.py):
 - Only an admin can Create (POST), Update (PATCH) or Delete (DELETE) a villager's data
 
 As seen in [models/villager.py](/src/models/villager.py):
-	```
-	class Villager(db.Model):
-		# name of table
-		__tablename__ = "villager"
+```
+class Villager(db.Model):
+	# name of table
+	__tablename__ = "villager"
 
-		# arributes of the table
-		id = db.Column(db.BigInteger, primary_key=True)
-		name = db.Column(db.String, nullable=False)
-		gender = db.Column(db.String, nullable=False)
-		species = db.Column(db.String, nullable=False)
-		personality = db.Column(db.String, nullable=False)
-		birthday = db.Column(db.String, nullable=False)
-		catchphrase = db.Column(db.String, nullable=False)
-		hobbies = db.Column(db.String, nullable=False)
-	```
+	# arributes of the table
+	id = db.Column(db.BigInteger, primary_key=True)
+	name = db.Column(db.String, nullable=False)
+	gender = db.Column(db.String, nullable=False)
+	species = db.Column(db.String, nullable=False)
+	personality = db.Column(db.String, nullable=False)
+	birthday = db.Column(db.String, nullable=False)
+	catchphrase = db.Column(db.String, nullable=False)
+	hobbies = db.Column(db.String, nullable=False)
+```
 
 
 ---
@@ -681,25 +682,25 @@ As seen in [models/villager.py](/src/models/villager.py):
 
 
 As seen in [models/island_villager.py](/src/models/island_villager.py):
-	```
-	class IslandVillager(db.Model):
-		# name of the table
-		__tablename__ = "island_villager"
+```
+class IslandVillager(db.Model):
+	# name of the table
+	__tablename__ = "island_villager"
 
-		# Attributes of the table
-		id = db.Column(db.Integer, primary_key=True)
-		text = db.Column(db.String, nullable=True)
+	# Attributes of the table
+	id = db.Column(db.Integer, primary_key=True)
+	text = db.Column(db.String, nullable=True)
 
-		# Foreign keys
-		island_id = db.Column(db.Integer, db.ForeignKey("island.id"), nullable=False)
-		villager_id = db.Column(db.Integer, db.ForeignKey("villager.id"), nullable=False)
-		
-		# Relationships
-		# IslandVillagers links back to Island table
-		island = db.relationship('Island')
-		# IslandVillagers links back to Villager table
-		villager = db.relationship('Villager')
-	```
+	# Foreign keys
+	island_id = db.Column(db.Integer, db.ForeignKey("island.id"), nullable=False)
+	villager_id = db.Column(db.Integer, db.ForeignKey("villager.id"), nullable=False)
+	
+	# Relationships
+	# IslandVillagers links back to Island table
+	island = db.relationship('Island')
+	# IslandVillagers links back to Villager table
+	villager = db.relationship('Villager')
+```
 
 - Relationships:
     - IslandVillagers links back to Island table
@@ -721,27 +722,27 @@ As seen in [models/island_villager.py](/src/models/island_villager.py):
     - `island_id` (FK): Foreign key linking to the Island table.
 
 As seen in [models/wanted_villagers.py](/src/models/wanted_villagers.py):
-	```
-	class WantedVillagers(db.Model):
-		# table name
-		__tablename__ = "wanted_villagers"
+```
+class WantedVillagers(db.Model):
+	# table name
+	__tablename__ = "wanted_villagers"
 
-		# attributes of the table
-		id = db.Column(db.Integer, primary_key=True)
+	# attributes of the table
+	id = db.Column(db.Integer, primary_key=True)
 
-		# Foreign keys
-		island_id = db.Column(db.Integer, db.ForeignKey('island.id'), nullable=False)
-		villager_id = db.Column(db.Integer, db.ForeignKey('villager.id'), nullable=False)
-		
+	# Foreign keys
+	island_id = db.Column(db.Integer, db.ForeignKey('island.id'), nullable=False)
+	villager_id = db.Column(db.Integer, db.ForeignKey('villager.id'), nullable=False)
+	
 
-		# Relationships
-		# WantedVillagers links back to Island
-		island = db.relationship('Island', backref='wanted_villagers')
-		# WantedVillagers links back to Villager
-		villager = db.relationship('Villager', backref='wanted_villagers')
-		# WantedVillager links back to Note
-		notes = db.relationship('Note', back_populates='wanted_villager')
-	```
+	# Relationships
+	# WantedVillagers links back to Island
+	island = db.relationship('Island', backref='wanted_villagers')
+	# WantedVillagers links back to Villager
+	villager = db.relationship('Villager', backref='wanted_villagers')
+	# WantedVillager links back to Note
+	notes = db.relationship('Note', back_populates='wanted_villager')
+```
 
 
 - Relationships:
@@ -767,22 +768,22 @@ As seen in [models/wanted_villagers.py](/src/models/wanted_villagers.py):
     - `notes`: The note text.
 
 As seen in [models/note.py](/src/models/note.py):
-	```
-	class Note(db.Model):
-		# name of table
-		__tablename__ = "notes"
+```
+class Note(db.Model):
+	# name of table
+	__tablename__ = "notes"
 
-		# Attributes of table
-		id = db.Column(db.Integer, primary_key=True)
-		notes = db.Column(db.String, nullable=True)
-		# Foreign keys
-		wanted_villagers_id = db.Column(db.Integer, db.ForeignKey('wanted_villagers.id'), nullable=False)
+	# Attributes of table
+	id = db.Column(db.Integer, primary_key=True)
+	notes = db.Column(db.String, nullable=True)
+	# Foreign keys
+	wanted_villagers_id = db.Column(db.Integer, db.ForeignKey('wanted_villagers.id'), nullable=False)
 
 
-		# Relationship
-		# Notes links back to WantedVillagers
-		wanted_villager = db.relationship('WantedVillagers', back_populates='notes')
-	```
+	# Relationship
+	# Notes links back to WantedVillagers
+	wanted_villager = db.relationship('WantedVillagers', back_populates='notes')
+```
 
 -  Relationships:
     - Notes links back to WantedVillagers
